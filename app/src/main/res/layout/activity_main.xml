@@ -9,7 +9,7 @@
         tools:context=".actvities.MainActivity">
 
         <de.floriansymmank.conwaysgameoflife.views.GameOfLifeView
-            android:id="@+id/reee"
+            android:id="@+id/gameOfLife"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

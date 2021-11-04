@@ -21,10 +21,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void resumeGame(View view) {
-        binding.reee.start();
+        binding.gameOfLife.start();
     }
 
     public void stopGame(View view) {
-        binding.reee.stop();
+        binding.gameOfLife.stop();
     }
 }

@@ -20,14 +20,18 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
 
     private final int aliveColor = Color.WHITE;
     private final int deadColor = Color.BLACK;
-    private int cols = 200;
-    private int rows = 200;
+    private final int dragColor = Color.YELLOW;
+    private final int cols = 50;
+    private final int rows = 50;
+    private final Rect rect = new Rect();
+    private final Paint cellPaint = new Paint();
+    private final Paint dragPaint = new Paint();
+    private Point startPoint = new Point();
     private int cellWidth = -1;
     private int cellHeight = -1;
-    private Rect r = new Rect();
-    private Paint p = new Paint();
     private Thread thread;
     private boolean isRunning = false;
+    private boolean isDragging = false;
     private ConwayWorld world;
 
     public GameOfLifeView(Context context) {
@@ -49,8 +53,7 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
 
             try {
                 Thread.sleep(300);
-
-            } catch (InterruptedException e) {
+            } catch (InterruptedException ignored) {
             }
 
             Canvas canvas = getHolder().lockCanvas();
@@ -61,6 +64,9 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
     }
 
     public void start() {
+        if (isRunning)
+            return;
+
         isRunning = true;
         thread = new Thread(this);
         thread.start();
@@ -75,10 +81,12 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
             }
             break;
         }
-
     }
 
     private void initWorld() {
+        dragPaint.setColor(dragColor);
+        dragPaint.setAlpha(150);
+
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point point = new Point();
@@ -88,7 +96,7 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
         cellHeight = point.y / rows;
         world = new ConwayWorld(rows, cols);
 
-        Log.println(Log.DEBUG, "initWorld", "CellWidth: " + cellWidth + " CellHeight: " + cellHeight + " rows: " + rows + " cols: " + cols);
+        // Log.println(Log.DEBUG, "initWorld", "CellWidth: " + cellWidth + " CellHeight: " + cellHeight + " rows: " + rows + " cols: " + cols);
     }
 
     private void drawCells(Canvas canvas) {
@@ -100,35 +108,69 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
                 Cell cell = world.getCell(i, j);
                 int left = j * cellWidth;
                 int right = (j + 1) * cellWidth;
-                r.set(left, top, right, bottom);
+                rect.set(left, top, right, bottom);
                 //Log.println(Log.DEBUG, "drawCells", "Drawing now:" + left + " " + top + " " + right + " " + bottom);
-                p.setColor(cell.isAlive() ? aliveColor : deadColor);
-                canvas.drawRect(r, p);
+                cellPaint.setColor(cell.isAlive() ? aliveColor : deadColor);
+                canvas.drawRect(rect, cellPaint);
             }
         }
     }
 
-    // We let the user to interact with the Cells of the World
+    private void drawSelection(Canvas canvas, Point p1, Point p2) {
+        Log.println(Log.DEBUG, "drawSelection", "Drawing now");
+        rect.set(p1.x, p1.y, p2.x, p2.y);
+        canvas.drawRect(rect, dragPaint);
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            // we get the coordinates of the touch and we convert it in coordinates for the board
-            int row = (int) (event.getY() / cellHeight);
-            int col = (int) (event.getX() / cellWidth);
 
-            Log.println(Log.DEBUG, "onTouchEvent", "Touch at row: " + row + " col:" + col);
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_MOVE:
+                Log.println(Log.DEBUG, "ACTION_MOVE", "Moving ...");
+                isDragging = true;
+                return true;
 
-            // we get the cell associated to these positions
-            Cell cell = world.getCell(row, col);
-            // we call the invert method of the cell got to change its state
-            cell.invert();
+            case MotionEvent.ACTION_CANCEL:
+                Log.println(Log.DEBUG, "ACTION_CANCEL", "Cancel ...");
+                isDragging = false;
+                return true;
 
-            Canvas canvas = getHolder().lockCanvas();
-            drawCells(canvas);
-            getHolder().unlockCanvasAndPost(canvas);
+            case MotionEvent.ACTION_DOWN:
+                Log.println(Log.DEBUG, "ACTION_DOWN", "down ...");
+                startPoint = new Point((int) event.getX(), (int) event.getY());
+                return true;
 
-            invalidate();
+            case MotionEvent.ACTION_UP:
+                Log.println(Log.DEBUG, "ACTION_UP", "up ...");
+                Canvas canvas = getHolder().lockCanvas();
+
+                if (!isDragging) {
+                    Log.println(Log.DEBUG, "ACTION_UP", "cell ...");
+                    int row = (int) (event.getY() / cellHeight);
+                    int col = (int) (event.getX() / cellWidth);
+                    world.getCell(row, col).invert();
+                }
+
+                drawCells(canvas);
+
+                if (isDragging) {
+                    Log.println(Log.DEBUG, "ACTION_UP", "drag ...");
+                    Point endPoint = new Point((int) event.getX(), (int) event.getY());
+                    drawSelection(canvas, startPoint, endPoint);
+                }
+
+                getHolder().unlockCanvasAndPost(canvas);
+                invalidate();
+
+                isDragging = false;
+                return true;
         }
+
         return super.onTouchEvent(event);
+    }
+
+    public boolean isRunning() {
+        return isRunning;
     }
 }
