@@ -6,18 +6,15 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.WindowManager;
-import android.widget.Toast;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import androidx.databinding.Observable;
+import androidx.databinding.library.baseAdapters.BR;
 
 import de.floriansymmank.conwaysgameoflife.models.Cell;
 import de.floriansymmank.conwaysgameoflife.models.ConwayWorld;
@@ -40,6 +37,18 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
     private boolean isDragging = false;
     private ConwayWorld world;
 
+    private Observable.OnPropertyChangedCallback resetCallBack = new Observable.OnPropertyChangedCallback() {
+        @Override
+        public void onPropertyChanged(Observable sender, int propertyId) {
+            if (propertyId == BR.unique && getConwayWorld().isUnique()) {
+                Canvas canvas = getHolder().lockCanvas();
+                drawCells(canvas);
+                getHolder().unlockCanvasAndPost(canvas);
+                invalidate();
+            }
+        }
+    };
+
     public GameOfLifeView(Context context) {
         super(context);
         initWorld();
@@ -49,7 +58,6 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
         super(context, attrs);
         initWorld();
     }
-
 
     @Override
     public void run() {
@@ -64,9 +72,13 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
             }
 
             Canvas canvas = getHolder().lockCanvas();
-            world.tickGeneration();
+            boolean ticked = world.tickGeneration();
             drawCells(canvas);
             getHolder().unlockCanvasAndPost(canvas);
+
+            if (!ticked) {
+                stop();
+            }
         }
     }
 
@@ -103,27 +115,8 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
         cellHeight = point.y / rows;
         world = new ConwayWorld(rows, cols);
 
-        world.addChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-                postToastMessage("Welt ist nicht mehr einzigartig Gen: " + world.getScores());
-            }
-        });
-
-        // Log.println(Log.DEBUG, "initWorld", "CellWidth: " + cellWidth + " CellHeight: " + cellHeight + " rows: " + rows + " cols: " + cols);
+        getConwayWorld().addOnPropertyChangedCallback(resetCallBack);
     }
-
-    public void postToastMessage(final String message) {
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-                Log.println(Log.DEBUG, "postToastMessage", message);
-            }
-        });
-    }
-
 
     private void drawCells(Canvas canvas) {
         Log.println(Log.DEBUG, "drawCells", "Drawing now");
@@ -198,5 +191,9 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
 
     public boolean isRunning() {
         return isRunning;
+    }
+
+    public ConwayWorld getConwayWorld() {
+        return world;
     }
 }

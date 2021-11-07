@@ -2,30 +2,32 @@ package de.floriansymmank.conwaysgameoflife.models;
 
 import android.util.Log;
 
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
+
 import com.google.gson.Gson;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.Base64;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ConwayWorld {
+import de.floriansymmank.conwaysgameoflife.BR;
+
+public class ConwayWorld extends BaseObservable {
 
     public final static String RESURRECTION_SCORE = "RESURRECTION_SCORE";
     public final static String DEATH_SCORE = "DEATH_SCORE";
     public final static String GENERATION_SCORE = "GENERATION_SCORE";
-    public static final String ISUNIQUE = "isUnique";
+
     private final int rows;
     private final int columns;
     private final Cell[][] grid;
 
     private final ScoreHolder scores = new ScoreHolder();
     private final HashSet<String> states = new HashSet<>();
-
-    private final List<PropertyChangeListener> listener = new LinkedList<>();
 
     private boolean isUnique = true;
 
@@ -60,11 +62,33 @@ public class ConwayWorld {
         return grid[column][row];
     }
 
+    public void resetWorld() {
+
+        isUnique = true;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                grid[i][j].die();
+            }
+        }
+
+        scores.reset();
+
+        notifyPropertyChanged(BR.deathScore);
+        notifyPropertyChanged(BR.resurrectionScore);
+        notifyPropertyChanged(BR.generationScore);
+        notifyPropertyChanged(BR.unique);
+    }
+
     /**
      * Computes next generation, all births and deaths occur simultaneously.
      */
-    public void tickGeneration() {
+    public boolean tickGeneration() {
         Log.println(Log.DEBUG, "tickGeneration", "new Gen");
+
+        if (!isUnique) {
+            Log.println(Log.DEBUG, "tickGeneration", "cant tick not unique gen");
+            return false;
+        }
 
         LinkedList<Cell> aliveCells = new LinkedList<Cell>();
         LinkedList<Cell> deadCells = new LinkedList<Cell>();
@@ -109,6 +133,8 @@ public class ConwayWorld {
         }
 
         score(deadToAliveCount, aliveToDeadCount);
+
+        return true;
     }
 
     private void score(int deadToAliveCount, int aliveToDeadCount) {
@@ -117,8 +143,13 @@ public class ConwayWorld {
             scores.addScore(ConwayWorld.DEATH_SCORE, aliveToDeadCount);
             scores.addScore(ConwayWorld.RESURRECTION_SCORE, deadToAliveCount);
             scores.addScore(ConwayWorld.GENERATION_SCORE, 1);
-        } else if (isUnique)
-            notifyListeners(this, ISUNIQUE, this.isUnique, this.isUnique = false);
+            notifyPropertyChanged(BR.deathScore);
+            notifyPropertyChanged(BR.resurrectionScore);
+            notifyPropertyChanged(BR.generationScore);
+        } else if (isUnique) {
+            isUnique = false;
+            notifyPropertyChanged(BR.unique);
+        }
     }
 
     /**
@@ -170,21 +201,47 @@ public class ConwayWorld {
         return new Gson().fromJson(decodedString, Cell[][].class);
     }
 
-    private void notifyListeners(Object object, String property, boolean oldValue, boolean newValue) {
-        for (PropertyChangeListener name : listener) {
-            name.propertyChange(new PropertyChangeEvent(this, property, oldValue, newValue));
-        }
-    }
-
-    public void addChangeListener(PropertyChangeListener newListener) {
-        listener.add(newListener);
-    }
-
-    public boolean isUnique() {
-        return isUnique;
-    }
 
     public ScoreHolder getScores() {
         return scores;
+    }
+
+    @Bindable
+    public BigDecimal getGenerationScore() {
+
+        try {
+            return scores.getScore(GENERATION_SCORE);
+        } catch (ScoreNotFoundException ignored) {
+        }
+
+        return new BigDecimal(0);
+    }
+
+    @Bindable
+    public BigDecimal getDeathScore() {
+
+        try {
+            return scores.getScore(DEATH_SCORE);
+        } catch (ScoreNotFoundException ignored) {
+        }
+
+        return new BigDecimal(0);
+    }
+
+
+    @Bindable
+    public BigDecimal getResurrectionScore() {
+
+        try {
+            return scores.getScore(RESURRECTION_SCORE);
+        } catch (ScoreNotFoundException ignored) {
+        }
+
+        return new BigDecimal(0);
+    }
+
+    @Bindable
+    public boolean isUnique() {
+        return isUnique;
     }
 }
