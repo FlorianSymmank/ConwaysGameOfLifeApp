@@ -1,15 +1,21 @@
 package de.floriansymmank.conwaysgameoflife.actvities;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.databinding.Observable;
-import androidx.databinding.library.baseAdapters.BR;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import ConwayGameEngine.ConwayGame;
+import ConwayGameEngine.ConwayGameImpl;
+import ConwayGameEngine.Score;
+import ConwayGameEngine.ScoreChangedListener;
+import ConwayGameEngine.UniqueStateChangedListener;
 import de.floriansymmank.conwaysgameoflife.R;
 import de.floriansymmank.conwaysgameoflife.databinding.ActivityMainBinding;
 
@@ -21,34 +27,84 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ConwayGame game = new ConwayGameImpl("", 1, 50, 50);
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-        binding.setConwayWorld(binding.gameOfLife.getConwayWorld());
-        binding.getConwayWorld().addOnPropertyChangedCallback(resetCallback);
+        binding.gameOfLife.initWorld(game);
+        binding.setGame(game);
+
+        game.setScoreChangedListener(new ScoreChangedListener() {
+            @Override
+            public void changed(Score score) {
+                if (score.getName().equals(ConwayGame.Scores.DEATH_SCORE.toString()))
+                    setText(binding.deathScore, String.valueOf(score.getScore()));
+
+                if (score.getName().equals(ConwayGame.Scores.GENERATION_SCORE.toString()))
+                    setText(binding.genScore, String.valueOf(score.getScore()));
+
+                if (score.getName().equals(ConwayGame.Scores.RESURRECTION_SCORE.toString()))
+                    setText(binding.resScore, String.valueOf(score.getScore()));
+            }
+
+            @Override
+            public void cleared() {
+                setText(binding.resScore, String.valueOf(0));
+                setText(binding.resScore, String.valueOf(0));
+                setText(binding.resScore, String.valueOf(0));
+            }
+
+            @Override
+            public void removed(Score score) {
+
+            }
+        });
+
+        game.setUniqueStateChangedListener(new UniqueStateChangedListener() {
+            @Override
+            public void changed(boolean b) {
+
+                Log.println(Log.DEBUG, "Hannes", "changed: " + b);
+
+                Drawable img;
+
+                if (b) {
+                    img = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_play_arrow_24);
+                    setImage(binding.fabControl, img);
+                } else {
+                    img = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_settings_backup_restore_24);
+                    setImage(binding.fabControl, img);
+                    binding.gameOfLife.stop();
+                    // TODO: Add Dialog/Save and reset
+                    // binding.gameOfLife.getConwaGame().reset();
+                    // Then
+                    // img = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_play_arrow_24);
+                }
+            }
+        });
+
         setContentView(binding.getRoot());
     }
 
-    private Observable.OnPropertyChangedCallback resetCallback = new Observable.OnPropertyChangedCallback() {
-        @Override
-        public void onPropertyChanged(Observable sender, int propertyId) {
-            if(propertyId == BR.unique && !binding.getConwayWorld().isUnique()){
-                binding.fabControl.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_settings_backup_restore_24));
-            }
-        }
-    };
+    private void setImage(final FloatingActionButton fab, final Drawable img) {
+        runOnUiThread(() -> fab.setImageDrawable(img));
+    }
+
+    private void setText(final TextView view, final String value) {
+        runOnUiThread(() -> view.setText(value));
+    }
 
     public void controlGame(View view) {
+        Drawable img;
 
-        if (binding.getConwayWorld().isUnique()) {
-            if (binding.gameOfLife.isRunning()) {
-                binding.gameOfLife.stop();
-                binding.fabControl.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_play_arrow_24));
-            } else {
-                binding.gameOfLife.start();
-                binding.fabControl.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_stop_24));
-            }
+        if (binding.gameOfLife.isRunning()) {
+            binding.gameOfLife.stop();
+            img = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_play_arrow_24);
         } else {
-            binding.getConwayWorld().resetWorld();
-            binding.fabControl.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_play_arrow_24));
+            binding.gameOfLife.start();
+            img = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_stop_24);
         }
+
+        setImage(binding.fabControl, img);
     }
 }

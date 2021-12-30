@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
-            name="ConwayWorld"
-            type="de.floriansymmank.conwaysgameoflife.models.ConwayWorld" />
+            name="game"
+            type="ConwayGameEngine.ConwayGame" />
 
         <import type="android.view.View" />
 
@@ -17,7 +16,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".actvities.MainActivity">
+        tools:context=".activities.MainActivity">
 
         <de.floriansymmank.conwaysgameoflife.views.GameOfLifeView
             android:id="@+id/gameOfLife"
@@ -77,26 +76,26 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:id="@+id/resScore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@{Converters.convertBigDeciamlToString(ConwayWorld.resurrectionScore)}"
                     android:textAlignment="center"
                     android:textColor="@color/white" />
 
                 <TextView
+                    android:id="@+id/genScore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@{Converters.convertBigDeciamlToString(ConwayWorld.generationScore)}"
                     android:textAlignment="center"
                     android:textColor="@color/white" />
 
                 <TextView
+                    android:id="@+id/deathScore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@{Converters.convertBigDeciamlToString(ConwayWorld.deathScore)}"
                     android:textAlignment="center"
                     android:textColor="@color/white" />
             </TableRow>
@@ -111,8 +110,7 @@
             android:text="GameOver"
             android:textColor="@color/red"
             android:textSize="25dp"
-            android:visibility="@{ConwayWorld.unique ? View.GONE : View.VISIBLE }"
-
+            android:visibility="@{game.unique ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

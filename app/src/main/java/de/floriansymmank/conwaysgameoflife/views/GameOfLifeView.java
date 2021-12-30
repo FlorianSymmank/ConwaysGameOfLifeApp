@@ -13,19 +13,15 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 
-import androidx.databinding.Observable;
-import androidx.databinding.library.baseAdapters.BR;
-
-import de.floriansymmank.conwaysgameoflife.models.Cell;
-import de.floriansymmank.conwaysgameoflife.models.ConwayWorld;
+import ConwayGameEngine.Cell;
+import ConwayGameEngine.ConwayGame;
 
 public class GameOfLifeView extends SurfaceView implements Runnable {
 
     private final int aliveColor = Color.WHITE;
     private final int deadColor = Color.BLACK;
     private final int dragColor = Color.YELLOW;
-    private final int cols = 50;
-    private final int rows = 50;
+
     private final Rect rect = new Rect();
     private final Paint cellPaint = new Paint();
     private final Paint dragPaint = new Paint();
@@ -35,28 +31,15 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
     private Thread thread;
     private boolean isRunning = false;
     private boolean isDragging = false;
-    private ConwayWorld world;
+    private ConwayGame game;
 
-    private Observable.OnPropertyChangedCallback resetCallBack = new Observable.OnPropertyChangedCallback() {
-        @Override
-        public void onPropertyChanged(Observable sender, int propertyId) {
-            if (propertyId == BR.unique && getConwayWorld().isUnique()) {
-                Canvas canvas = getHolder().lockCanvas();
-                drawCells(canvas);
-                getHolder().unlockCanvasAndPost(canvas);
-                invalidate();
-            }
-        }
-    };
 
     public GameOfLifeView(Context context) {
         super(context);
-        initWorld();
     }
 
     public GameOfLifeView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initWorld();
     }
 
     @Override
@@ -72,7 +55,7 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
             }
 
             Canvas canvas = getHolder().lockCanvas();
-            boolean ticked = world.tickGeneration();
+            boolean ticked = game.tickGeneration();
             drawCells(canvas);
             getHolder().unlockCanvasAndPost(canvas);
 
@@ -92,6 +75,9 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
     }
 
     public void stop() {
+
+        if(!isRunning) return;
+
         isRunning = false;
         while (true) {
             try {
@@ -102,7 +88,7 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
         }
     }
 
-    private void initWorld() {
+    public void initWorld(ConwayGame game) {
         dragPaint.setColor(dragColor);
         dragPaint.setAlpha(150);
 
@@ -111,20 +97,19 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
         Point point = new Point();
         display.getSize(point);
 
-        cellWidth = point.x / cols;
-        cellHeight = point.y / rows;
-        world = new ConwayWorld(rows, cols);
+        cellWidth = point.x / game.getColumns();
+        cellHeight = point.y / game.getRows();
 
-        getConwayWorld().addOnPropertyChangedCallback(resetCallBack);
+        this.game = game;
     }
 
     private void drawCells(Canvas canvas) {
         Log.println(Log.DEBUG, "drawCells", "Drawing now");
-        for (int i = 0; i < rows; i++) {
+        for (int i = 0; i < game.getRows(); i++) {
             int top = i * cellHeight;
             int bottom = (i + 1) * cellHeight;
-            for (int j = 0; j < cols; j++) {
-                Cell cell = world.getCell(i, j);
+            for (int j = 0; j < game.getColumns(); j++) {
+                Cell cell = game.getCell(i, j);
                 int left = j * cellWidth;
                 int right = (j + 1) * cellWidth;
                 rect.set(left, top, right, bottom);
@@ -168,7 +153,7 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
                     Log.println(Log.DEBUG, "ACTION_UP", "cell ...");
                     int row = (int) (event.getY() / cellHeight);
                     int col = (int) (event.getX() / cellWidth);
-                    world.getCell(row, col).invert();
+                    game.getCell(row, col).invert();
                 }
 
                 drawCells(canvas);
@@ -193,7 +178,7 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
         return isRunning;
     }
 
-    public ConwayWorld getConwayWorld() {
-        return world;
+    public ConwayGame getConwaGame() {
+        return game;
     }
 }

@@ -18,18 +18,4 @@ public class Converters {
     public static String convertIntToString(int value) {
         return Integer.toString(value);
     }
-
-    public static BigDecimal convertStringToBigDecimal(String text) {
-       return new BigDecimal(text);
-    }
-
-    @InverseMethod(value = "convertStringToBigDecimal")
-
-    public static String convertBigDeciamlToString(BigDecimal value) {
-
-        if(value == null)
-            value = new BigDecimal(0);
-
-        return value.toPlainString();
-    }
 }
