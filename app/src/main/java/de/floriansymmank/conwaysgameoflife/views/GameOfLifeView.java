@@ -20,19 +20,14 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
 
     private final int aliveColor = Color.WHITE;
     private final int deadColor = Color.BLACK;
-    private final int dragColor = Color.YELLOW;
 
     private final Rect rect = new Rect();
     private final Paint cellPaint = new Paint();
-    private final Paint dragPaint = new Paint();
-    private Point startPoint = new Point();
     private int cellWidth = -1;
     private int cellHeight = -1;
     private Thread thread;
     private boolean isRunning = false;
-    private boolean isDragging = false;
     private ConwayGame game;
-
 
     public GameOfLifeView(Context context) {
         super(context);
@@ -54,10 +49,8 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
             } catch (InterruptedException ignored) {
             }
 
-            Canvas canvas = getHolder().lockCanvas();
             boolean ticked = game.tickGeneration();
-            drawCells(canvas);
-            getHolder().unlockCanvasAndPost(canvas);
+            drawCells();
 
             if (!ticked) {
                 stop();
@@ -76,7 +69,7 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
 
     public void stop() {
 
-        if(!isRunning) return;
+        if (!isRunning) return;
 
         isRunning = false;
         while (true) {
@@ -88,10 +81,12 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
         }
     }
 
-    public void initWorld(ConwayGame game) {
-        dragPaint.setColor(dragColor);
-        dragPaint.setAlpha(150);
+    public void reset() {
+        game.reset();
+        drawCells();
+    }
 
+    public void initWorld(ConwayGame game) {
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point point = new Point();
@@ -103,7 +98,9 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
         this.game = game;
     }
 
-    private void drawCells(Canvas canvas) {
+    private void drawCells() {
+        Canvas canvas = getHolder().lockCanvas();
+
         Log.println(Log.DEBUG, "drawCells", "Drawing now");
         for (int i = 0; i < game.getRows(); i++) {
             int top = i * cellHeight;
@@ -118,56 +115,27 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
                 canvas.drawRect(rect, cellPaint);
             }
         }
-    }
 
-    private void drawSelection(Canvas canvas, Point p1, Point p2) {
-        Log.println(Log.DEBUG, "drawSelection", "Drawing now");
-        rect.set(p1.x, p1.y, p2.x, p2.y);
-        canvas.drawRect(rect, dragPaint);
+        getHolder().unlockCanvasAndPost(canvas);
+        invalidate();
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
         switch (event.getAction()) {
-            case MotionEvent.ACTION_MOVE:
-                Log.println(Log.DEBUG, "ACTION_MOVE", "Moving ...");
-                isDragging = true;
-                return true;
-
-            case MotionEvent.ACTION_CANCEL:
-                Log.println(Log.DEBUG, "ACTION_CANCEL", "Cancel ...");
-                isDragging = false;
-                return true;
 
             case MotionEvent.ACTION_DOWN:
                 Log.println(Log.DEBUG, "ACTION_DOWN", "down ...");
-                startPoint = new Point((int) event.getX(), (int) event.getY());
                 return true;
 
             case MotionEvent.ACTION_UP:
                 Log.println(Log.DEBUG, "ACTION_UP", "up ...");
-                Canvas canvas = getHolder().lockCanvas();
 
-                if (!isDragging) {
-                    Log.println(Log.DEBUG, "ACTION_UP", "cell ...");
-                    int row = (int) (event.getY() / cellHeight);
-                    int col = (int) (event.getX() / cellWidth);
-                    game.getCell(row, col).invert();
-                }
-
-                drawCells(canvas);
-
-                if (isDragging) {
-                    Log.println(Log.DEBUG, "ACTION_UP", "drag ...");
-                    Point endPoint = new Point((int) event.getX(), (int) event.getY());
-                    drawSelection(canvas, startPoint, endPoint);
-                }
-
-                getHolder().unlockCanvasAndPost(canvas);
-                invalidate();
-
-                isDragging = false;
+                int row = (int) (event.getY() / cellHeight);
+                int col = (int) (event.getX() / cellWidth);
+                game.getCell(row, col).invert();
+                drawCells();
                 return true;
         }
 
@@ -176,9 +144,5 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
 
     public boolean isRunning() {
         return isRunning;
-    }
-
-    public ConwayGame getConwaGame() {
-        return game;
     }
 }
