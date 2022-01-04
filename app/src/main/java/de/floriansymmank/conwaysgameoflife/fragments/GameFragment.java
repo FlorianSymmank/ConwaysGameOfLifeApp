@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -179,6 +180,7 @@ public class GameFragment extends Fragment implements ScoreChangedListener, Uniq
                 try {
                     facade.saveGame(binding.getGame());
                 } catch (IOException ignored) {
+                    Toast.makeText(getContext(), "GAME NOT SAVED", Toast.LENGTH_LONG).show();
                 }
         }
         return false;

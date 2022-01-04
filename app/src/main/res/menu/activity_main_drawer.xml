@@ -9,5 +9,10 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Game" />
 
+        <item
+            android:id="@+id/nav_saved_games"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Game" />
+
     </group>
 </menu>

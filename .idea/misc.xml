@@ -17,9 +17,11 @@
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/fragment_home.xml" value="0.5744791666666667" />
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/fragment_item.xml" value="0.4734375" />
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/fragment_item_list.xml" value="0.459375" />
+        <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/fragment_saved_games_list.xml" value="0.5" />
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/fragment_slideshow.xml" value="0.5744791666666667" />
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/game_menu.xml" value="0.5744791666666667" />
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/nav_header_main.xml" value="0.5744791666666667" />
+        <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/row_saved_games_list.xml" value="0.4734375" />
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/menu/activity_main_drawer.xml" value="0.5744791666666667" />
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/menu/game_menu.xml" value="0.475" />
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/menu/main.xml" value="0.5744791666666667" />

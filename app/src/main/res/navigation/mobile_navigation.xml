@@ -8,7 +8,13 @@
     <fragment
         android:id="@+id/nav_game"
         android:name="de.floriansymmank.conwaysgameoflife.fragments.GameFragment"
-        android:label="@string/menu_slideshow"
+        android:label="Game"
         tools:layout="@layout/fragment_game" />
+
+    <fragment
+        android:id="@+id/nav_saved_games"
+        android:name="de.floriansymmank.conwaysgameoflife.fragments.SavedGamesListFragment"
+        android:label="Games"
+        tools:layout="@layout/fragment_saved_games_list" />
 
 </navigation>
