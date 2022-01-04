@@ -1,7 +1,6 @@
-package de.floriansymmank.conwaysgameoflife;
+package de.floriansymmank.conwaysgameoflife.fragments;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
@@ -10,14 +9,17 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import ConwayGameEngine.FinalScore;
+import de.floriansymmank.conwaysgameoflife.DialogListener;
 
 public class ShareDialogFragment extends DialogFragment {
+
     private FinalScore score;
     private String message = "";
     private DialogListener listener;
 
-    public ShareDialogFragment(FinalScore score) {
+    public ShareDialogFragment(FinalScore score, DialogListener listener) {
         this.score = score;
+        this.listener = listener;
         message = "gen: " + score.getGenerationScore() + " res: " + score.getResurrectionScore() + " deaths: " + score.getDeathScore();
     }
 
@@ -38,16 +40,6 @@ public class ShareDialogFragment extends DialogFragment {
                 });
 
         return builder.create();
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        try {
-            listener = (DialogListener) context;
-        } catch (ClassCastException ignored) {
-        }
     }
 
     public FinalScore getScore() {
