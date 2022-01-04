@@ -1,16 +1,19 @@
 package de.floriansymmank.conwaysgameoflife.actvities;
 
+import android.Manifest;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.io.IOException;
 
 import ConwayGameEngine.ConwayGame;
 import ConwayGameEngine.ConwayGameEngineFacade;
@@ -34,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements ScoreChangedListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         facade = new ConwayGameEngineFacadeImpl(getFilesDir().getAbsolutePath());
         ConwayGame game = facade.createGame("", 0, 50, 50);
 
@@ -49,10 +51,13 @@ public class MainActivity extends AppCompatActivity implements ScoreChangedListe
         setText(binding.resScore, String.valueOf(game.getResurrectionScore().getScore()));
         setText(binding.genScore, String.valueOf(game.getGenerationScore().getScore()));
 
-
-
         setContentView(binding.getRoot());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            requestPermissions(new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE}, 1);
+        }
     }
+
 
     private void setImage(final FloatingActionButton fab, final Drawable img) {
         runOnUiThread(() -> fab.setImageDrawable(img));
@@ -92,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements ScoreChangedListe
     }
 
     @Override
-    public void changed(Score score) {
+    public void scoreChanged(Score score) {
         if (score.getName().equals(ConwayGame.Scores.DEATH_SCORE.toString()))
             setText(binding.deathScore, String.valueOf(score.getScore()));
 
@@ -104,25 +109,26 @@ public class MainActivity extends AppCompatActivity implements ScoreChangedListe
     }
 
     @Override
-    public void cleared() {
+    public void scoreCleared() {
         setText(binding.resScore, String.valueOf(0));
         setText(binding.resScore, String.valueOf(0));
         setText(binding.resScore, String.valueOf(0));
     }
 
     @Override
-    public void removed(Score score) {
+    public void scoreRemoved(Score score) {
 
     }
 
     @Override
-    public void changed(boolean b) {
+    public void uniqueChanged(boolean b) {
         if (b) {
             Drawable img = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_play_arrow_24);
             setImage(binding.fabControl, img);
         } else {
+
             FinalScore score = binding.getGame().getFinalScore();
-            DialogFragment dialog = new ShareDialogFragment(score);
+            ShareDialogFragment dialog = new ShareDialogFragment(score);
             dialog.show(getSupportFragmentManager(), "ShareDialogFragment");
 
             stop();
@@ -131,17 +137,17 @@ public class MainActivity extends AppCompatActivity implements ScoreChangedListe
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialogFragment) {
-        reset();
-
-        ShareDialogFragment dia = (ShareDialogFragment) dialogFragment;
-
-        facade.saveScore(dia.getScore());
-
-        Toast.makeText(this, "Count: " + facade.getAllScores().size(), Toast.LENGTH_SHORT).show();
+        // TODO: Share
     }
 
     @Override
-    public void onDialogNegativeClick(DialogFragment dialogFragment) {
+    public void onDialogDismiss(DialogFragment dialogFragment) {
+
+        try {
+            facade.saveScore(((ShareDialogFragment) dialogFragment).getScore());
+        } catch (IOException ignored) {
+        }
+
         reset();
     }
 }
