@@ -5,6 +5,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -16,6 +19,8 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -36,12 +41,12 @@ public class GameFragment extends Fragment implements ScoreChangedListener, Uniq
     private ConwayGameEngineFacade facade;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        //setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
 
         binding = FragmentGameBinding.inflate(inflater, container, false);
 
         facade = new ConwayGameEngineFacadeImpl(getActivity().getFilesDir().getAbsolutePath());
+
         ConwayGame game = facade.createGame("", 0, 50, 50);
 
         binding.gameOfLife.initWorld(game);
@@ -56,10 +61,12 @@ public class GameFragment extends Fragment implements ScoreChangedListener, Uniq
 
         binding.fabControl.setOnClickListener(this::controlGame);
 
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             requestPermissions(new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE}, 1);
         }
+
+        Drawable img = ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.ic_baseline_play_arrow_24);
+        setImage(binding.fabControl, img);
 
         return binding.getRoot();
     }
@@ -156,7 +163,24 @@ public class GameFragment extends Fragment implements ScoreChangedListener, Uniq
         }
 
         reset();
+    }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull @NotNull Menu menu, @NonNull @NotNull MenuInflater inflater) {
+        inflater.inflate(R.menu.game_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.save_game:
+                stop();
+                try {
+                    facade.saveGame(binding.getGame());
+                } catch (IOException ignored) {
+                }
+        }
+        return false;
     }
 }
