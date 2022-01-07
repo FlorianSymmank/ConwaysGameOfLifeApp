@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -142,12 +143,26 @@ public class GameFragment extends Fragment implements ScoreChangedListener, Uniq
         } else {
 
             FinalScore score = binding.getGame().getFinalScore();
-
-            ShareDialogFragment dialog = new ShareDialogFragment(score, this);
-            dialog.show(getActivity().getSupportFragmentManager(), "ShareDialogFragment");
-
+            showShareDialog(score);
             stop();
         }
+    }
+
+    private void showShareDialog(FinalScore score) {
+
+        // ShareDialogFragment dialog = new ShareDialogFragment(score, this);
+        // dialog.show(getActivity().getSupportFragmentManager(), "ShareDialogFragment");
+
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag(ShareDialogFragment.SHARE_DIALOG_FRAGMENT_TAG);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+
+        ft.addToBackStack(ShareDialogFragment.SHARE_DIALOG_FRAGMENT_TAG);
+
+        DialogFragment newFragment = ShareDialogFragment.newInstance(score, this, false);
+        newFragment.show(ft, ShareDialogFragment.SHARE_DIALOG_FRAGMENT_TAG);
     }
 
     @Override
