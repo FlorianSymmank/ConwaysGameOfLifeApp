@@ -11,28 +11,23 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
-import ConwayGameEngine.FinalScore;
 import de.floriansymmank.conwaysgameoflife.DialogListener;
 import de.floriansymmank.conwaysgameoflife.R;
 
-public class ShareDialogFragment extends DialogFragment {
+public class SaveDialogFragment extends DialogFragment {
 
     // The tag for this fragment
-    public static final String SHARE_DIALOG_FRAGMENT_TAG = "SHARE_DIALOG_FRAGMENT_TAG";
+    public static final String SAVE_DIALOG_FRAGMENT_TAG = "SAVE_DIALOG_FRAGMENT_TAG";
 
-    private final FinalScore score;
     private final DialogListener listener;
-    private final boolean hasTextInput;
     private EditText edInput;
 
-    public ShareDialogFragment(FinalScore score, DialogListener listener, boolean hasTextInput) {
-        this.score = score;
+    public SaveDialogFragment(DialogListener listener) {
         this.listener = listener;
-        this.hasTextInput = hasTextInput;
     }
 
-    public static DialogFragment newInstance(FinalScore score, DialogListener listener, boolean hasTextInput) {
-        return new ShareDialogFragment(score, listener, hasTextInput);
+    public static DialogFragment newInstance(DialogListener listener) {
+        return new SaveDialogFragment(listener);
     }
 
     @Override
@@ -41,32 +36,27 @@ public class ShareDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        if (hasTextInput) {
-            View view = inflater.inflate(R.layout.name_input_dialog, null);
-            edInput = (EditText) view.findViewById(R.id.et_name);
-            builder.setView(view);
-        }
+        View view = inflater.inflate(R.layout.name_input_dialog, null);
+        edInput = (EditText) view.findViewById(R.id.et_name);
+        edInput.setHint("Name des Spiels");
+        builder.setView(view);
 
-        String message = "gen: " + score.getGenerationScore() + " res: " + score.getResurrectionScore() + " deaths: " + score.getDeathScore();
+        String message = "Wollen Sie den akutellen Zustand speichern?";
 
-        builder.setTitle("Share this Result?")
+        builder.setTitle("Speichern?")
                 .setMessage(message)
-                .setPositiveButton("Share!", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Speichern!", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        listener.onDialogPositiveClick(ShareDialogFragment.this);
+                        listener.onDialogPositiveClick(SaveDialogFragment.this);
                     }
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Nö", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        listener.onDialogNegativeClick(ShareDialogFragment.this);
+                        listener.onDialogNegativeClick(SaveDialogFragment.this);
                     }
                 });
 
         return builder.create();
-    }
-
-    public FinalScore getScore() {
-        return score;
     }
 
     public String getInputText() {
@@ -84,4 +74,6 @@ public class ShareDialogFragment extends DialogFragment {
         super.onDismiss(dialog);
         listener.onDialogDismiss(this);
     }
+
+
 }

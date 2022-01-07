@@ -1,6 +1,7 @@
 package de.floriansymmank.conwaysgameoflife.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -144,41 +145,61 @@ public class GameFragment extends Fragment implements ScoreChangedListener, Uniq
 
             FinalScore score = binding.getGame().getFinalScore();
             showShareDialog(score);
-            stop();
+            reset();
         }
     }
 
     private void showShareDialog(FinalScore score) {
-
-        // ShareDialogFragment dialog = new ShareDialogFragment(score, this);
-        // dialog.show(getActivity().getSupportFragmentManager(), "ShareDialogFragment");
-
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag(ShareDialogFragment.SHARE_DIALOG_FRAGMENT_TAG);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-
-        ft.addToBackStack(ShareDialogFragment.SHARE_DIALOG_FRAGMENT_TAG);
-
+        FragmentTransaction ft = getFragmentTransaction(ShareDialogFragment.SHARE_DIALOG_FRAGMENT_TAG);
         DialogFragment newFragment = ShareDialogFragment.newInstance(score, this, false);
         newFragment.show(ft, ShareDialogFragment.SHARE_DIALOG_FRAGMENT_TAG);
     }
 
+    private void showSaveDialog() {
+        FragmentTransaction ft = getFragmentTransaction(SaveDialogFragment.SAVE_DIALOG_FRAGMENT_TAG);
+        DialogFragment newFragment = SaveDialogFragment.newInstance(this);
+        newFragment.show(ft, SaveDialogFragment.SAVE_DIALOG_FRAGMENT_TAG);
+    }
+
+    @NonNull
+    private FragmentTransaction getFragmentTransaction(String fragmentTag) {
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag(fragmentTag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+
+        ft.addToBackStack(fragmentTag);
+        return ft;
+    }
+
     @Override
     public void onDialogPositiveClick(DialogFragment dialogFragment) {
-        // TODO: Share
+
+        if (dialogFragment instanceof ShareDialogFragment) {
+            // TODO: Share
+
+        } else if (dialogFragment instanceof SaveDialogFragment) {
+            try {
+                stop();
+                String gameName = ((SaveDialogFragment) dialogFragment).getInputText();
+                binding.getGame().setName(gameName);
+                facade.saveGame(binding.getGame());
+                Toast.makeText(getContext(), "Game Saved!", Toast.LENGTH_SHORT).show();
+            } catch (IOException ignored) {
+                Toast.makeText(getContext(), "GAME NOT SAVED", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     @Override
     public void onDialogDismiss(DialogFragment dialogFragment) {
 
-        try {
-            facade.saveScore(((ShareDialogFragment) dialogFragment).getScore());
-        } catch (IOException ignored) {
-        }
+        if (dialogFragment instanceof ShareDialogFragment) {
 
-        reset();
+        } else if (dialogFragment instanceof SaveDialogFragment) {
+
+        }
     }
 
     @Override
@@ -191,12 +212,7 @@ public class GameFragment extends Fragment implements ScoreChangedListener, Uniq
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.save_game:
-                stop();
-                try {
-                    facade.saveGame(binding.getGame());
-                } catch (IOException ignored) {
-                    Toast.makeText(getContext(), "GAME NOT SAVED", Toast.LENGTH_LONG).show();
-                }
+                showSaveDialog();
         }
         return false;
     }

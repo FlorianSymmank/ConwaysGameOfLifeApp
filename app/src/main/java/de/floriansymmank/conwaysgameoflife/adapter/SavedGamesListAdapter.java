@@ -40,7 +40,7 @@ public class SavedGamesListAdapter extends RecyclerView.Adapter<SavedGamesListAd
     @Override
     public void onBindViewHolder(@NonNull SavedGameViewHolder holder, int position) {
         ConwayGame current = gameList.get(position);
-        holder.tvGameName.setText(current.getFinalScore().getPlayerName()); // TODO: Make ConwayGame nameable
+        holder.tvGameName.setText(current.getName()); // TODO: Make ConwayGame nameable
 
         String msg = MessageFormat.format("Death: {0} Gen: {1} Res: {2}",
                 current.getDeathScore().getScore(),

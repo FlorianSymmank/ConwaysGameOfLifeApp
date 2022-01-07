@@ -1,5 +1,6 @@
 package de.floriansymmank.conwaysgameoflife.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +60,8 @@ public class SavedGamesListFragment extends Fragment implements ListAdapterListe
 
     @Override
     public void onButtonClick(ConwayGame item) {
-
+//        Intent intent = new Intent(getContext(), GameFragment.class);
+//        intent.putExtra(WorkoutDetailActivity.EXTRA_PLAYLIST_ID, playlist.playlist.playlistId);
+//        startActivity(intent);
     }
 }
