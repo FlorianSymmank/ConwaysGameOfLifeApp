@@ -23,7 +23,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
@@ -91,56 +90,71 @@ public class GameActivity extends AppCompatActivity implements ScoreChangedListe
         mActionBar.setDisplayShowHomeEnabled(false);
         mActionBar.setDisplayShowTitleEnabled(false);
         LayoutInflater li = LayoutInflater.from(this);
-        View customView = li.inflate(R.layout.game_toolbar, null);
-        mActionBar.setCustomView(customView);
+
+        View toolbar = li.inflate(R.layout.game_toolbar, null);
+        mActionBar.setCustomView(toolbar);
         mActionBar.setDisplayShowCustomEnabled(true);
 
-        ImageButton addContent = (ImageButton) customView.findViewById(R.id.item1);
-        addContent.setOnClickListener(new View.OnClickListener() {
+        ImageButton item1 = toolbar.findViewById(R.id.menutItem);
+        item1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                drawer.openDrawer();
+                if (drawer.isDrawerOpen())
+                    drawer.closeDrawer();
+                else
+                    drawer.openDrawer();
             }
         });
 
-        ImageButton addContent2 = (ImageButton) customView.findViewById(R.id.item2);
-        addContent2.setOnClickListener(new View.OnClickListener() {
+        ImageButton item2 = toolbar.findViewById(R.id.saveItem);
+        item2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showSaveDialog();
             }
         });
 
+        ImageButton item3 = toolbar.findViewById(R.id.resetItem);
+        item3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                reset();
+            }
+        });
+
+
         return mActionBar;
     }
 
     private Drawer initDrawer() {
 
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName("Hannes");
-        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withIdentifier(2).withName("Udo");
+        PrimaryDrawerItem i = new PrimaryDrawerItem();
+        SecondaryDrawerItem item1 = new SecondaryDrawerItem().withIdentifier(1).withName("New Conway's Game of Life");
+        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withIdentifier(2).withName("Saved Games");
 
-        //create the drawer and remember the `Drawer` result object
-        Drawer drawer = new DrawerBuilder()
+        return new DrawerBuilder()
                 .withActivity(this)
                 .withTranslucentStatusBar(false)
                 .withActionBarDrawerToggle(false)
-                .addDrawerItems(
-                        item1,
-                        new DividerDrawerItem(),
-                        item2,
-                        new SecondaryDrawerItem().withName("Moritz")
-                )
+                .addDrawerItems(i, item1, item2)
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        // do something with the clicked item :D
-                        Toast.makeText(getApplicationContext(), "Hannes!", Toast.LENGTH_LONG).show();
+                        switch ((int) drawerItem.getIdentifier()) {
+                            case 1:
+//                                Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+//                                startActivity(intent);
+
+                                reset();
+                                break;
+                            case 2:
+                                Toast.makeText(getApplicationContext(), "Saved Games", Toast.LENGTH_SHORT).show();
+                                break;
+                        }
                         return true;
                     }
                 })
                 .build();
-
-        return drawer;
     }
 
     private void setImage(final FloatingActionButton fab, final Drawable img) {
