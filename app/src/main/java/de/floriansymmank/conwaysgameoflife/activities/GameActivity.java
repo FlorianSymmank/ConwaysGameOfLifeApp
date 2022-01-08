@@ -1,6 +1,7 @@
 package de.floriansymmank.conwaysgameoflife.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,6 +45,8 @@ import de.floriansymmank.conwaysgameoflife.fragments.ShareDialogFragment;
 
 public class GameActivity extends AppCompatActivity implements ScoreChangedListener, UniqueStateChangedListener, DialogListener {
 
+    public static String CONWAYGAME_EXTRA = "CONWAYGAME_EXTRA";
+
     private ActivityGameBinding binding;
     private ConwayGameEngineFacade facade;
 
@@ -54,8 +57,14 @@ public class GameActivity extends AppCompatActivity implements ScoreChangedListe
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_game);
+        ConwayGame g = null;
+        if ((g = (ConwayGame) getIntent().getSerializableExtra(CONWAYGAME_EXTRA)) != null) {
+            Toast.makeText(getApplicationContext(), "Score:  " + g.getGenerationScore().getScore(), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "Kein Spiel übergeben", Toast.LENGTH_SHORT).show();
+        }
 
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_game);
         binding.setLifecycleOwner(this);
 
         facade = new ConwayGameEngineFacadeImpl(getFilesDir().getAbsolutePath());
@@ -144,11 +153,11 @@ public class GameActivity extends AppCompatActivity implements ScoreChangedListe
                             case 1:
 //                                Intent intent = new Intent(getApplicationContext(), GameActivity.class);
 //                                startActivity(intent);
-
                                 reset();
                                 break;
                             case 2:
-                                Toast.makeText(getApplicationContext(), "Saved Games", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getApplicationContext(), SavedGamesListActivity.class);
+                                startActivity(intent);
                                 break;
                         }
                         return true;
