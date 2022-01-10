@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="navigation_drawer_open">Navigation öffnen</string>
+    <string name="navigation_drawer_close">Navigation schließen</string>
+    <string name="nav_header_desc">Navigation Kopfzeile</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="menu_gallery">Gallerie</string>
+    <string name="hello_blank_fragment">Hallo leeres Fragment</string>
+    <string name="EnterYourUserName">Bitte geben Sie Ihren Benutzernamen ein.</string>
+    <string name="EnterAmountVCells">Bitte geben Sie die Anzahl der vertikalen Zellen ein.</string>
+    <string name="EnterAmountHCells">Bitte geben Sie die Anzahl der horizontalen Zellen ein.</string>
+    <string name="EnterUpdateInterval">Bitte geben Sie das Aktualisierungsintervall ein.</string>
+    <string name="InvalidInterval">Ungültiger Intervallwert (muss zwischen 1 und 5000 liegen).</string>
+    <string name="DeathScore">Anzahl Tode</string>
+    <string name="GenScore">Anzahl Generationen</string>
+    <string name="ResScore">Anzahl Wiedergeburten</string>
+    <string name="Date">Datum</string>
+    <string name="SaveStateQuestion">Möchten Sie den aktuellen Zustand speichern?</string>
+    <string name="SaveTitle">Speichern?</string>
+    <string name="Save">Speichern</string>
+    <string name="No">Nein</string>
+    <string name="NameGameHint">Benne das Spiel</string>
+    <string name="ShareThisResult">Dieses Ergebnis teilen?</string>
+    <string name="Share">Teilen</string>
+    <string name="NewConwaysGame">Neues Conway\'s Game of Life</string>
+    <string name="SavedGames">Gespeicherte Spiele</string>
+    <string name="SavedScores">Gespeicherte Spielstände</string>
+    <string name="Settings">Einstellungen</string>
+    <string name="GameControl">Spielsteuerung</string>
+    <string name="NoSavedGamesFound">Keine gespeicherten Spiele gefunden</string>
+    <string name="NoSavedScoresFound">Keine gespeicherten Spielstände gefunden</string>
+    <string name="Username">Benutzername</string>
+    <string name="NumberOfVerticalCells">Anzahl der vertikalen Zellen</string>
+    <string name="NumberOfHorizontalCells">Anzahl der horizontalen Zellen</string>
+    <string name="IntervalInMs">Intervall in MS</string>
+    <string name="ResetEverythingAndSave">Alles zurücksetzen und speichern</string>
+    <string name="input">Eingabe…</string>
+    <string name="LoadGame">Spiel/nLaden</string>
+    <string name="GameName">Spielname</string>
+    <string name="PlayerName">Spielername</string>
+</resources>
