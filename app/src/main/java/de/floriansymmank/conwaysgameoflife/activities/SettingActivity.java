@@ -127,8 +127,8 @@ public class SettingActivity extends ASAPActivity {
                     return;
                 } else {
                     int interval = Integer.parseInt(binding.etInterval.getText().toString());
-                    if (interval <= 10 || interval > 5000) {
-                        Toast.makeText(getApplicationContext(), "Ungültiger Wert, muss zwischen 10 und 5000 ms liegen", Toast.LENGTH_SHORT).show();
+                    if (interval < 1 || interval > 5000) {
+                        Toast.makeText(getApplicationContext(), "Ungültiger Wert, muss zwischen 1 und 5000 ms liegen", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }

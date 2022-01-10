@@ -218,6 +218,7 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
     }
 
     private void showSaveDialog() {
+        stop();
         FragmentTransaction ft = getFragmentTransaction(SaveDialogFragment.SAVE_DIALOG_FRAGMENT_TAG);
         DialogFragment newFragment = SaveDialogFragment.newInstance(this);
         newFragment.show(ft, SaveDialogFragment.SAVE_DIALOG_FRAGMENT_TAG);
@@ -248,8 +249,6 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
 
             byte[] serialized = ConwayGameEngine.Util.Serialize.finalScoreSerializer(fs);
 
-
-            //TODO:
             try {
                 getASAPPeer().sendASAPMessage(ConwayGameComponent.APP_NAME, ConwayGameComponent.FINAL_SCORE_URI, serialized);
             } catch (ASAPException ignored) {

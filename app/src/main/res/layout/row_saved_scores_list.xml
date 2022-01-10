@@ -12,7 +12,7 @@
         android:id="@+id/tvPlayerName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="@dimen/small_padding"
         android:text="PlayerName"
         android:textStyle="bold"
         android:tooltipText="Playername"
@@ -23,11 +23,10 @@
         android:id="@+id/tvResScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/small_padding"
         android:text="Resscore"
         android:tooltipText="ResScore"
-        app:layout_constraintStart_toEndOf="@id/tvPlayerName"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@id/tvPlayerName"
+        app:layout_constraintTop_toBottomOf="@id/tvPlayerName" />
 
     <TextView
         android:id="@+id/tvDeathScore"
@@ -37,7 +36,7 @@
         android:text="DeathScore"
         android:tooltipText="DeathScore"
         app:layout_constraintStart_toEndOf="@id/tvResScore"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/tvResScore" />
 
     <TextView
         android:id="@+id/tvGenScore"
@@ -46,18 +45,19 @@
         android:paddingStart="@dimen/small_padding"
         android:text="GenScore"
         android:tooltipText="GenScore"
-        app:layout_constraintStart_toEndOf="@id/tvDeathScore"
+        app:layout_constraintStart_toEndOf="@id/tvDate"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingStart="@dimen/small_padding"
         android:text="Date"
         android:textStyle="italic"
         android:tooltipText="Date"
-        app:layout_constraintStart_toStartOf="@id/tvPlayerName"
-        app:layout_constraintTop_toBottomOf="@id/tvPlayerName" />
+        app:layout_constraintStart_toEndOf="@id/tvPlayerName"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
