@@ -15,6 +15,7 @@ import de.floriansymmank.conwaysgameoflife.activities.SavedGamesListActivity;
 import de.floriansymmank.conwaysgameoflife.activities.SavedScoresListActivity;
 import de.floriansymmank.conwaysgameoflife.activities.SettingActivity;
 
+// idk a better name for this
 public class NormalDrawer implements Drawer.OnDrawerItemClickListener {
 
     private final Activity activity;
@@ -24,8 +25,8 @@ public class NormalDrawer implements Drawer.OnDrawerItemClickListener {
         this.activity = activity;
     }
 
+    // helper method to create identical drawers
     public static Drawer createNormalDrawer(Activity activity) {
-
         NormalDrawer nd = new NormalDrawer(activity);
 
         PrimaryDrawerItem i = new PrimaryDrawerItem();
@@ -52,6 +53,8 @@ public class NormalDrawer implements Drawer.OnDrawerItemClickListener {
 
     @Override
     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+
+        // launch chosen activity, if current activity is chosen, close drawer
         switch ((int) drawerItem.getIdentifier()) {
             case 1:
                 if (activity.getClass() == GameActivity.class)

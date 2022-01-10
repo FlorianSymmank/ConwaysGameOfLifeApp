@@ -21,7 +21,7 @@ public class ShareDialogFragment extends DialogFragment {
 
     private final FinalScore score;
     private final DialogListener listener;
-    private final boolean hasTextInput;
+    private final boolean hasTextInput; // can turn on/off extra text input
     private EditText edInput;
 
     public ShareDialogFragment(FinalScore score, DialogListener listener, boolean hasTextInput) {

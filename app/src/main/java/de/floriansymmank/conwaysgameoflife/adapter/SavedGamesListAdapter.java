@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.text.MessageFormat;
 import java.util.List;
 
 import ConwayGameEngine.ConwayGame;
@@ -28,7 +27,6 @@ public class SavedGamesListAdapter extends RecyclerView.Adapter<SavedGamesListAd
         this.listener = listener;
         this.gameList = itemsList;
     }
-
 
     @NonNull
     @Override

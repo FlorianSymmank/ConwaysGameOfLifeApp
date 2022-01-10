@@ -14,10 +14,9 @@ public class ConwayGameComponentFactory implements SharkComponentFactory {
 
     @Override
     public SharkComponent getComponent() {
-
-        if (this.instance == null) {
+        if (this.instance == null)
             this.instance = new ConwayGameComponent(defaultDirectory);
-        }
+
         return this.instance;
     }
 }

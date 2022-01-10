@@ -1,8 +1,6 @@
 package de.floriansymmank.conwaysgameoflife.activities;
 
-import android.Manifest;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,19 +31,18 @@ import ConwayGameEngine.FinalScore;
 import ConwayGameEngine.Score;
 import ConwayGameEngine.ScoreChangedListener;
 import ConwayGameEngine.UniqueStateChangedListener;
+import de.floriansymmank.conwaysgameoflife.R;
 import de.floriansymmank.conwaysgameoflife.asap.ConwayGameApp;
 import de.floriansymmank.conwaysgameoflife.asap.ConwayGameComponent;
-import de.floriansymmank.conwaysgameoflife.fragments.DialogListener;
-import de.floriansymmank.conwaysgameoflife.utils.NormalDrawer;
-import de.floriansymmank.conwaysgameoflife.R;
 import de.floriansymmank.conwaysgameoflife.databinding.ActivityGameBinding;
+import de.floriansymmank.conwaysgameoflife.fragments.DialogListener;
 import de.floriansymmank.conwaysgameoflife.fragments.SaveDialogFragment;
 import de.floriansymmank.conwaysgameoflife.fragments.ShareDialogFragment;
+import de.floriansymmank.conwaysgameoflife.utils.NormalDrawer;
 
 public class GameActivity extends ASAPActivity implements ScoreChangedListener, UniqueStateChangedListener, DialogListener {
 
-    // TODO: ASAPActivity
-
+    // get game as extra
     public static String CONWAYGAME_EXTRA = "CONWAYGAME_EXTRA";
 
     private ActivityGameBinding binding;
@@ -65,14 +62,16 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
 
         ConwayGame game = null;
         if ((game = (ConwayGame) getIntent().getSerializableExtra(CONWAYGAME_EXTRA)) != null) {
+            Log.println(Log.DEBUG, "GameActivity onCreate", "got Game as Extra");
         } else {
             game = facade.createGame(
                     ConwayGameApp.getConwayGameApp().getPlayerName(),
                     ConwayGameApp.getConwayGameApp().getPlayerID(),
                     ConwayGameApp.getConwayGameApp().getWidth(),
                     ConwayGameApp.getConwayGameApp().getHeight());
-        }
 
+            Log.println(Log.DEBUG, "GameActivity onCreate", "created new Game");
+        }
 
         binding.gameOfLife.initWorld(game);
         binding.setGame(game);
@@ -80,18 +79,16 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
         game.setScoreChangedListener(this);
         game.setUniqueStateChangedListener(this);
 
+        // initiate drawer and actionbar
         drawer = NormalDrawer.createNormalDrawer(this);
         actionBar = initActionBar();
 
+        // set texts
         setText(binding.deathScore, String.valueOf(game.getDeathScore().getScore()));
         setText(binding.resScore, String.valueOf(game.getResurrectionScore().getScore()));
         setText(binding.genScore, String.valueOf(game.getGenerationScore().getScore()));
 
         binding.fabControl.setOnClickListener(this::controlGame);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            requestPermissions(new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE}, 1);
-        }
 
         Drawable img = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_play_arrow_24);
         setImage(binding.fabControl, img);
@@ -107,8 +104,8 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
         mActionBar.setCustomView(toolbar);
         mActionBar.setDisplayShowCustomEnabled(true);
 
-        ImageButton item1 = toolbar.findViewById(R.id.menutItem);
-        item1.setOnClickListener(new View.OnClickListener() {
+        ImageButton btnMenu = toolbar.findViewById(R.id.menutItem);
+        btnMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (drawer.isDrawerOpen())
@@ -118,22 +115,21 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
             }
         });
 
-        ImageButton item2 = toolbar.findViewById(R.id.saveItem);
-        item2.setOnClickListener(new View.OnClickListener() {
+        ImageButton btnSave = toolbar.findViewById(R.id.saveItem);
+        btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showSaveDialog();
             }
         });
 
-        ImageButton item3 = toolbar.findViewById(R.id.resetItem);
-        item3.setOnClickListener(new View.OnClickListener() {
+        ImageButton btnReset = toolbar.findViewById(R.id.resetItem);
+        btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 reset();
             }
         });
-
 
         return mActionBar;
     }
@@ -158,18 +154,21 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
     }
 
     private void reset() {
+        // resets the game into a neutral state
         binding.gameOfLife.reset();
         Drawable img = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_play_arrow_24);
         setImage(binding.fabControl, img);
     }
 
     private void stop() {
+        // halts the game in its current state
         binding.gameOfLife.stop();
         Drawable img = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_play_arrow_24);
         setImage(binding.fabControl, img);
     }
 
     private void start() {
+        //starts/restarts current game
         binding.gameOfLife.start();
         Drawable img = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_stop_24);
         setImage(binding.fabControl, img);
@@ -177,6 +176,9 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
 
     @Override
     public void scoreChanged(Score score) {
+        // Called when ConwayGame informs about an score change
+        // set according scores
+
         if (score.getName().equals(ConwayGame.Scores.DEATH_SCORE.toString()))
             setText(binding.deathScore, String.valueOf(score.getScore()));
 
@@ -189,6 +191,8 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
 
     @Override
     public void scoreCleared() {
+        // reset visual scoretable
+
         setText(binding.resScore, String.valueOf(0));
         setText(binding.resScore, String.valueOf(0));
         setText(binding.resScore, String.valueOf(0));
@@ -200,11 +204,12 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
     }
 
     @Override
-    public void uniqueChanged(boolean b) {
-        if (b) {
+    public void uniqueChanged(boolean unique) {
+        if (unique) {
             Drawable img = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_play_arrow_24);
             setImage(binding.fabControl, img);
         } else {
+            // game is not unique anymore, halt and inform user
             FinalScore score = binding.getGame().getFinalScore();
             showShareDialog(score);
             stop();
@@ -212,12 +217,14 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
     }
 
     private void showShareDialog(FinalScore score) {
+        // show user an dialog, does user want to share the result?
         FragmentTransaction ft = getFragmentTransaction(ShareDialogFragment.SHARE_DIALOG_FRAGMENT_TAG);
         DialogFragment newFragment = ShareDialogFragment.newInstance(score, this, false);
         newFragment.show(ft, ShareDialogFragment.SHARE_DIALOG_FRAGMENT_TAG);
     }
 
     private void showSaveDialog() {
+        // show user an save dialog to save the current game
         stop();
         FragmentTransaction ft = getFragmentTransaction(SaveDialogFragment.SAVE_DIALOG_FRAGMENT_TAG);
         DialogFragment newFragment = SaveDialogFragment.newInstance(this);
@@ -226,6 +233,7 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
 
     @NonNull
     private FragmentTransaction getFragmentTransaction(String fragmentTag) {
+        // setup dialog
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag(fragmentTag);
         if (prev != null) {
@@ -239,25 +247,31 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
     @Override
     public void onDialogPositiveClick(DialogFragment dialogFragment) {
 
+        // user confirmed something
+
+        // dialog was share dialog
         if (dialogFragment instanceof ShareDialogFragment) {
             FinalScore fs = ((ShareDialogFragment) dialogFragment).getScore();
 
+            // Save score locally
             try {
-                facade.saveScore(fs);
+                facade.saveScore(fs); //
             } catch (IOException ignored) {
             }
 
-            byte[] serialized = ConwayGameEngine.Util.Serialize.finalScoreSerializer(fs);
-
+            // share score via ASAP, hopefully
             try {
+                byte[] serialized = ConwayGameEngine.Util.Serialize.finalScoreSerializer(fs);
                 getASAPPeer().sendASAPMessage(ConwayGameComponent.APP_NAME, ConwayGameComponent.FINAL_SCORE_URI, serialized);
-            } catch (ASAPException ignored) {
-                Log.println(Log.DEBUG, "sendASAPMessage", "sendASAPMessage");
+            } catch (ASAPException e) {
+                Log.println(Log.DEBUG, "GameActivity sendASAPMessage Exception", e.getMessage());
             }
 
             reset();
         } else if (dialogFragment instanceof SaveDialogFragment) {
+            // dialog as save dialog
             try {
+                // save game state locally, get user input as game name
                 String gameName = ((SaveDialogFragment) dialogFragment).getInputText();
                 binding.getGame().setName(gameName);
                 facade.saveGame(binding.getGame());
@@ -268,6 +282,7 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
 
     @Override
     public void onDialogDismiss(DialogFragment dialogFragment) {
+        // even if user declined share reset current game
         if (dialogFragment instanceof ShareDialogFragment) {
             reset();
         }
@@ -275,6 +290,7 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
 
     @Override
     protected void onDestroy() {
+        // if activity is destroyed stop conwaygameview thread!
         binding.gameOfLife.stop();
         super.onDestroy();
     }

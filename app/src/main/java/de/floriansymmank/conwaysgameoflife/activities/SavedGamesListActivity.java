@@ -23,11 +23,11 @@ import java.util.List;
 import ConwayGameEngine.ConwayGame;
 import ConwayGameEngine.ConwayGameEngineFacade;
 import ConwayGameEngine.ConwayGameEngineFacadeImpl;
-import de.floriansymmank.conwaysgameoflife.utils.NormalDrawer;
 import de.floriansymmank.conwaysgameoflife.R;
 import de.floriansymmank.conwaysgameoflife.adapter.ListAdapterListener;
 import de.floriansymmank.conwaysgameoflife.adapter.SavedGamesListAdapter;
 import de.floriansymmank.conwaysgameoflife.databinding.ActivitySavedGamesListBinding;
+import de.floriansymmank.conwaysgameoflife.utils.NormalDrawer;
 
 public class SavedGamesListActivity extends ASAPActivity implements ListAdapterListener<ConwayGame> {
 
@@ -47,12 +47,14 @@ public class SavedGamesListActivity extends ASAPActivity implements ListAdapterL
 
         facade = new ConwayGameEngineFacadeImpl(getFilesDir().getAbsolutePath());
 
+        // initiate drawer and actionbar
         drawer = NormalDrawer.createNormalDrawer(this);
         actionBar = initActionBar();
 
         populateList();
         binding.recyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
+        // fling = pull down recyclerview
         binding.recyclerview.setOnFlingListener(new OnFlingListener() {
             @Override
             public boolean onFling(int velocityX, int velocityY) {
@@ -63,6 +65,7 @@ public class SavedGamesListActivity extends ASAPActivity implements ListAdapterL
     }
 
     private void populateList() {
+        // get all currently available games, and display them
         List<ConwayGame> gameList = new LinkedList<>();
         try {
             gameList = facade.getAllGames();
@@ -72,7 +75,7 @@ public class SavedGamesListActivity extends ASAPActivity implements ListAdapterL
         if (gameList == null || gameList.size() == 0)
             binding.tvNoItems.setVisibility(View.VISIBLE);
         else
-            binding.tvNoItems.setVisibility(View.GONE);
+            binding.tvNoItems.setVisibility(View.GONE); // there wasnt any saved games
 
         adapter = new SavedGamesListAdapter(getApplicationContext(), this, gameList);
         binding.recyclerview.setAdapter(adapter);
@@ -88,8 +91,8 @@ public class SavedGamesListActivity extends ASAPActivity implements ListAdapterL
         mActionBar.setCustomView(toolbar);
         mActionBar.setDisplayShowCustomEnabled(true);
 
-        ImageButton item1 = toolbar.findViewById(R.id.menutItem);
-        item1.setOnClickListener(new View.OnClickListener() {
+        ImageButton btn1 = toolbar.findViewById(R.id.menutItem);
+        btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (drawer.isDrawerOpen())
@@ -99,8 +102,9 @@ public class SavedGamesListActivity extends ASAPActivity implements ListAdapterL
             }
         });
 
-        ImageButton item2 = toolbar.findViewById(R.id.deleteItem);
-        item2.setOnClickListener(new View.OnClickListener() {
+        // delete all saved games
+        ImageButton btn2 = toolbar.findViewById(R.id.deleteItem);
+        btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 facade.deleteGames();
@@ -114,16 +118,18 @@ public class SavedGamesListActivity extends ASAPActivity implements ListAdapterL
 
     @Override
     public void onRowClick(ConwayGame item) {
-
+        // no interaction needed
     }
 
     @Override
     public void onRowLongClick(ConwayGame item) {
-
+        // no interaction needed
+        // TODO: Maybe delete clicked game (dialog)
     }
 
     @Override
     public void onButtonClick(ConwayGame item) {
+        // open clicked game
         finish();
         Intent intent = new Intent(getApplicationContext(), GameActivity.class);
         intent.putExtra(GameActivity.CONWAYGAME_EXTRA, item);

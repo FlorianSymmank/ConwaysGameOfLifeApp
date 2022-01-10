@@ -2,8 +2,6 @@ package de.floriansymmank.conwaysgameoflife.utils;
 
 import androidx.databinding.InverseMethod;
 
-import java.math.BigDecimal;
-
 public class Converters {
     public static int convertStringToInt(String text) {
         int i = 0;

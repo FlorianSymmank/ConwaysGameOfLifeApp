@@ -19,6 +19,7 @@ public class FinalScoreMessageReceivedListener implements ASAPMessageReceivedLis
         CharSequence format = messages.getFormat();
         CharSequence uri = messages.getURI();
 
+        // discard wrong messages?
         if (!format.equals(ConwayGameComponent.APP_NAME) && uri.equals(ConwayGameComponent.FINAL_SCORE_URI))
             return;
 
@@ -27,9 +28,9 @@ public class FinalScoreMessageReceivedListener implements ASAPMessageReceivedLis
             try {
                 FinalScore fs = ConwayGameEngine.Util.Serialize.finalScoreDeserializer(msgIterator.next());
                 ConwayGameApp.getConwayGameApp().getConwayGameEngineFacade().saveScore(fs);
-                Log.println(Log.WARN, "asapMessagesReceived", "Final Score erhalten");
+                Log.println(Log.DEBUG, "FinalScoreMessageReceivedListener asapMessagesReceived", "Final Score erhalten, yay!");
             } catch (ClassNotFoundException e) {
-                Log.println(Log.DEBUG, "asapMessagesReceived", "Deserializer Class Not Found " + e.getMessage());
+                Log.println(Log.DEBUG, "FinalScoreMessageReceivedListener asapMessagesReceived", "Deserializer Class Not Found " + e.getMessage());
             }
         }
     }

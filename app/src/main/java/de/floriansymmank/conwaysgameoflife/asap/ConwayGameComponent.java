@@ -19,6 +19,7 @@ public class ConwayGameComponent extends ConwayGameEngineFacadeImpl implements S
 
     @Override
     public void onStart(ASAPPeer asapPeer) throws SharkException {
+        // register message receiver
         asapPeer.addASAPMessageReceivedListener(APP_NAME, new FinalScoreMessageReceivedListener());
     }
 }

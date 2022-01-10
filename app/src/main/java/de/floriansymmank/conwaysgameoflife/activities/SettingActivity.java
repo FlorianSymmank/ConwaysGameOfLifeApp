@@ -15,15 +15,15 @@ import com.mikepenz.materialdrawer.Drawer;
 import net.sharksystem.asap.android.apps.ASAPActivity;
 
 import ConwayGameEngine.ConwayGameEngineFacade;
-import de.floriansymmank.conwaysgameoflife.asap.ConwayGameApp;
-import de.floriansymmank.conwaysgameoflife.utils.NormalDrawer;
 import de.floriansymmank.conwaysgameoflife.R;
+import de.floriansymmank.conwaysgameoflife.asap.ConwayGameApp;
 import de.floriansymmank.conwaysgameoflife.databinding.ActivitySettingsBinding;
+import de.floriansymmank.conwaysgameoflife.utils.NormalDrawer;
 
 public class SettingActivity extends ASAPActivity {
-    public static final String FIRST_LAUNCH = "FIRST_LAUNCH";
 
-    // TODO: ASAPActivity
+    // if this extra is set, the app is launched for the first time
+    public static final String FIRST_LAUNCH = "FIRST_LAUNCH";
 
     private ActivitySettingsBinding binding;
     private ConwayGameEngineFacade facade;
@@ -41,12 +41,14 @@ public class SettingActivity extends ASAPActivity {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_settings);
 
+        // drawer and actionbar is not available if the app is started for the first time
+        // -> user has to save settings
+
         if (getIntent().getBooleanExtra(FIRST_LAUNCH, false)) {
             binding.btnResetEverything.setVisibility(View.GONE);
         } else {
             drawer = NormalDrawer.createNormalDrawer(this);
             actionBar = initActionBar();
-
             binding.btnResetEverything.setVisibility(View.VISIBLE);
         }
 
@@ -54,6 +56,7 @@ public class SettingActivity extends ASAPActivity {
         binding.btnSave.setOnClickListener(btnSaveClick());
         binding.btnResetEverything.setOnClickListener(btnResetEverythingClick());
 
+        // set current values
         binding.etHeight.setText(String.valueOf(ConwayGameApp.getConwayGameApp().getHeight()));
         binding.etWidth.setText(String.valueOf(ConwayGameApp.getConwayGameApp().getWidth()));
         binding.etName.setText(String.valueOf(ConwayGameApp.getConwayGameApp().getPlayerName()));
@@ -85,6 +88,7 @@ public class SettingActivity extends ASAPActivity {
     }
 
     private View.OnClickListener btnResetEverythingClick() {
+        // delete all games, saves; shared prefs = reset to default
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,6 +111,8 @@ public class SettingActivity extends ASAPActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // basic input validation
+                // TODO: maybe redo input validation later
                 if (binding.etName.getText().toString().isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Player Name is needed", Toast.LENGTH_SHORT).show();
                     return;
@@ -135,6 +141,7 @@ public class SettingActivity extends ASAPActivity {
 
                 saveSettings();
 
+                // first time started -> user cant chose target after saving -> straight to game activity
                 if (getIntent().getBooleanExtra(FIRST_LAUNCH, false)) {
                     launchFirstActivity();
                 }
@@ -143,6 +150,7 @@ public class SettingActivity extends ASAPActivity {
     }
 
     private void saveSettings() {
+        // let conwayGameApp set values to shared prefs
         conwayGameApp.setPlayerName(getApplicationContext(), binding.etName.getText().toString());
         conwayGameApp.setHeight(getApplicationContext(), Integer.parseInt(binding.etHeight.getText().toString()));
         conwayGameApp.setWidth(getApplicationContext(), Integer.parseInt(binding.etWidth.getText().toString()));

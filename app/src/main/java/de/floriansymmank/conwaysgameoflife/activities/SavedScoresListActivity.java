@@ -21,14 +21,13 @@ import java.util.List;
 
 import ConwayGameEngine.ConwayGameEngineFacade;
 import ConwayGameEngine.FinalScore;
-import de.floriansymmank.conwaysgameoflife.asap.ConwayGameApp;
-import de.floriansymmank.conwaysgameoflife.utils.NormalDrawer;
 import de.floriansymmank.conwaysgameoflife.R;
 import de.floriansymmank.conwaysgameoflife.adapter.SavedScoresListAdapter;
+import de.floriansymmank.conwaysgameoflife.asap.ConwayGameApp;
 import de.floriansymmank.conwaysgameoflife.databinding.ActivitySavedScoresListBinding;
+import de.floriansymmank.conwaysgameoflife.utils.NormalDrawer;
 
 public class SavedScoresListActivity extends ASAPActivity {
-    //TODO: ASAPActivity
 
     private ConwayGameEngineFacade facade;
     private ActivitySavedScoresListBinding binding;
@@ -46,12 +45,14 @@ public class SavedScoresListActivity extends ASAPActivity {
 
         facade = ConwayGameApp.getConwayGameApp().getConwayGameEngineFacade();
 
+        // initiate drawer and actionbar
         drawer = NormalDrawer.createNormalDrawer(this);
         actionBar = initActionBar();
 
         populateList();
         binding.recyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
+        // fling = pull down recyclerview
         binding.recyclerview.setOnFlingListener(new RecyclerView.OnFlingListener() {
             @Override
             public boolean onFling(int velocityX, int velocityY) {
@@ -62,6 +63,7 @@ public class SavedScoresListActivity extends ASAPActivity {
     }
 
     private void populateList() {
+        // get all scores and display them
         List<FinalScore> scores = new LinkedList<>();
         try {
             scores = facade.getAllScores();
@@ -72,7 +74,7 @@ public class SavedScoresListActivity extends ASAPActivity {
         if (scores == null || scores.size() == 0)
             binding.tvNoItems.setVisibility(View.VISIBLE);
         else
-            binding.tvNoItems.setVisibility(View.GONE);
+            binding.tvNoItems.setVisibility(View.GONE); // no score available
 
         adapter = new SavedScoresListAdapter(getApplicationContext(), scores);
         binding.recyclerview.setAdapter(adapter);
@@ -103,11 +105,10 @@ public class SavedScoresListActivity extends ASAPActivity {
         item2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                facade.deleteScores();
+                facade.deleteScores(); // delete all local scores
                 populateList();
             }
         });
-
 
         return mActionBar;
     }

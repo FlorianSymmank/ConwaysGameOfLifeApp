@@ -19,17 +19,23 @@ import ConwayGameEngine.ConwayGameEngineFacadeImpl;
 public class ConwayGameApp {
 
     public final static String PREFERENCES_FILE = "ConwayGameAppPref";
+
+    // Shared prefs keys
     public final static String PLAYER_NAME = "PLAYER_NAME";
     public final static String PLAYER_ID = "PLAYER_ID";
     public final static String GAME_WIDTH = "GAME_WIDTH";
     public final static String GAME_HEIGHT = "GAME_HEIGHT";
+    public final static String GAME_INTERVAL = "GAME_INTERVAL";
+
+    // default values
     public final static String DEFAULT_PLAYER_NAME = "PlayerOne";
     public final static int DEFAULT_GAME_WIDTH = 50;
     public final static int DEFAULT_GAME_HEIGHT = 50;
     public final static int DEFAULT_GAME_INTERVAL = 300;
-    private final static String GAME_INTERVAL = "GAME_INTERVAL";
-    static boolean _________________DEBUG_________________ = false; // TODO:
+
     private static ConwayGameApp singleton;
+
+    // current vals
     private final ConwayGameEngineFacade conwayGameEngineFacade;
     private SharkPeer sharkPeer;
     private ASAPAndroidPeer asapAndroidPeer;
@@ -40,14 +46,14 @@ public class ConwayGameApp {
     private String defaultDirectory = "";
     private int interval = 0;
 
-
     private ConwayGameApp(Activity initialActivity) {
 
-        // Create ConwayGame
         defaultDirectory = initialActivity.getFilesDir().getAbsolutePath();
         conwayGameEngineFacade = new ConwayGameEngineFacadeImpl(defaultDirectory);
 
         SharedPreferences sharedPref = initialActivity.getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE);
+
+        // load(default if not set) shared prefs
 
         // Player Name
         if (sharedPref.contains(PLAYER_NAME))
@@ -56,7 +62,7 @@ public class ConwayGameApp {
             this.playerName = DEFAULT_PLAYER_NAME;
 
         // Player ID
-        int rnd = new Random().nextInt();
+        int rnd = new Random().nextInt(1_000_000);
         if (sharedPref.contains(PLAYER_ID))
             this.playerID = sharedPref.getInt(PLAYER_ID, rnd);
         else
@@ -68,13 +74,11 @@ public class ConwayGameApp {
         else
             this.width = DEFAULT_GAME_WIDTH;
 
-
         // Game width
         if (sharedPref.contains(GAME_INTERVAL))
             this.interval = sharedPref.getInt(GAME_INTERVAL, DEFAULT_GAME_INTERVAL);
         else
             this.interval = DEFAULT_GAME_INTERVAL;
-
 
         // Game height
         if (sharedPref.contains(GAME_HEIGHT))
@@ -87,41 +91,40 @@ public class ConwayGameApp {
         if (ConwayGameApp.singleton == null) {
             ConwayGameApp.singleton = new ConwayGameApp(initialActivity);
 
-            if (!_________________DEBUG_________________)
-                try {
+            try {
 
-                    // produce application side shark peer
-                    ConwayGameApp.singleton.sharkPeer = new SharkPeerFS(
-                            getConwayGameApp().getOwnerID(),
-                            ConwayGameApp.singleton.getDefaultDirectory()
-                    );
+                // produce application side shark peer
+                ConwayGameApp.singleton.sharkPeer = new SharkPeerFS(
+                        getConwayGameApp().getOwnerID(),
+                        ConwayGameApp.singleton.getDefaultDirectory()
+                );
 
-                    // create ConwayGameComponentFactory
-                    ConwayGameComponentFactory factory =
-                            new ConwayGameComponentFactory(ConwayGameApp.singleton.getDefaultDirectory());
+                // create ConwayGameComponentFactory
+                ConwayGameComponentFactory factory =
+                        new ConwayGameComponentFactory(ConwayGameApp.singleton.getDefaultDirectory());
 
-                    // register this component with shark peer
-                    ConwayGameApp.singleton.sharkPeer.addComponent(factory, ConwayGameComponent.class);
+                // register this component with shark peer
+                ConwayGameApp.singleton.sharkPeer.addComponent(factory, ConwayGameComponent.class);
 
-                    // setup android (application side peer)
-                    ASAPAndroidPeer.initializePeer(
-                            getConwayGameApp().getOwnerID(),
-                            ConwayGameApp.singleton.sharkPeer.getFormats(),
-                            getConwayGameApp().getDefaultDirectory(),
-                            initialActivity);
+                // setup android (application side peer)
+                ASAPAndroidPeer.initializePeer(
+                        getConwayGameApp().getOwnerID(),
+                        ConwayGameApp.singleton.sharkPeer.getFormats(),
+                        getConwayGameApp().getDefaultDirectory(),
+                        initialActivity);
 
-                    // launch service side
-                    ASAPAndroidPeer applicationSideASAPPeer = ASAPAndroidPeer.startPeer(initialActivity);
+                // launch service side
+                ASAPAndroidPeer applicationSideASAPPeer = ASAPAndroidPeer.startPeer(initialActivity);
 
-                    // use asap peer proxy for this app side shark peer
-                    ConwayGameApp.singleton.sharkPeer.start(applicationSideASAPPeer);
+                // use asap peer proxy for this app side shark peer
+                ConwayGameApp.singleton.sharkPeer.start(applicationSideASAPPeer);
 
-                    // remember
-                    ConwayGameApp.singleton.setApplicationSideASAPAndroidPeer(applicationSideASAPPeer);
+                // remember
+                ConwayGameApp.singleton.setApplicationSideASAPAndroidPeer(applicationSideASAPPeer);
 
-                } catch (SharkException | IOException e) {
-                    Log.println(Log.DEBUG, "ConwayGameApp", "error initializeConwayGameApp " + e.toString());
-                }
+            } catch (SharkException | IOException e) {
+                Log.println(Log.DEBUG, "ConwayGameApp", "error initializeConwayGameApp " + e.toString());
+            }
         }
 
         return ConwayGameApp.singleton;
@@ -135,8 +138,13 @@ public class ConwayGameApp {
     }
 
     private void setApplicationSideASAPAndroidPeer(ASAPAndroidPeer applicationSideASAPPeer) {
+        if (this.asapAndroidPeer == null)
+            throw new RuntimeException("asapAndroidPeer not initialized yet!");
+
         this.asapAndroidPeer = applicationSideASAPPeer;
     }
+
+    // getters/setters
 
     public ConwayGameEngineFacade getConwayGameEngineFacade() {
         return conwayGameEngineFacade;
@@ -150,6 +158,26 @@ public class ConwayGameApp {
         return playerName;
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public String getDefaultDirectory() {
+        return defaultDirectory;
+    }
+
+    private CharSequence getOwnerID() {
+        return "O_ID_" + String.valueOf(getPlayerID());
+    }
+
+    public int getInterval() {
+        return interval;
+    }
+
     public void setPlayerName(Context ctx, String playerName) {
         SharedPreferences sharedPref = ctx.getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE);
 
@@ -158,10 +186,6 @@ public class ConwayGameApp {
         editor.apply();
 
         this.playerName = playerName;
-    }
-
-    public int getWidth() {
-        return width;
     }
 
     public void setWidth(Context ctx, int width) {
@@ -174,10 +198,6 @@ public class ConwayGameApp {
         this.width = width;
     }
 
-    public int getHeight() {
-        return height;
-    }
-
     public void setHeight(Context ctx, int height) {
         SharedPreferences sharedPref = ctx.getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE);
 
@@ -188,14 +208,6 @@ public class ConwayGameApp {
         this.height = height;
     }
 
-    public String getDefaultDirectory() {
-        return defaultDirectory;
-    }
-
-    private CharSequence getOwnerID() {
-        return "O_ID_" + String.valueOf(getPlayerID());
-    }
-
     public void setInterval(Context ctx, int interval) {
         SharedPreferences sharedPref = ctx.getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE);
 
@@ -204,10 +216,6 @@ public class ConwayGameApp {
         editor.apply();
 
         this.interval = interval;
-    }
-
-    public int getInterval() {
-        return interval;
     }
 
     public void resetSharedPreferences(Context ctx) {
