@@ -10,8 +10,11 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
+
+import androidx.annotation.NonNull;
 
 import ConwayGameEngine.Cell;
 import ConwayGameEngine.ConwayGame;
@@ -28,6 +31,22 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
     private Thread thread;
     private boolean isRunning = false;
     private ConwayGame game;
+    // forces a redraw of all cells once at startup to show existing cells, without the need to have user interaction to redraw
+    private SurfaceHolder.Callback oneTimeRedrawCallback = new SurfaceHolder.Callback() {
+        @Override
+        public void surfaceCreated(@NonNull SurfaceHolder holder) {
+            drawCells();
+            getHolder().removeCallback(this);
+        }
+
+        @Override
+        public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
+        }
+
+        @Override
+        public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
+        }
+    };
 
     public GameOfLifeView(Context context) {
         super(context);
@@ -96,6 +115,8 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
         cellHeight = point.y / game.getRows();
 
         this.game = game;
+
+        getHolder().addCallback(oneTimeRedrawCallback);
     }
 
     private void drawCells() {

@@ -1,11 +1,12 @@
 package de.floriansymmank.conwaysgameoflife.activities;
 
 import android.Manifest;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -14,7 +15,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
@@ -23,27 +23,28 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+
+import net.sharksystem.asap.ASAPException;
+import net.sharksystem.asap.android.apps.ASAPActivity;
 
 import java.io.IOException;
 
 import ConwayGameEngine.ConwayGame;
 import ConwayGameEngine.ConwayGameEngineFacade;
-import ConwayGameEngine.ConwayGameEngineFacadeImpl;
 import ConwayGameEngine.FinalScore;
 import ConwayGameEngine.Score;
 import ConwayGameEngine.ScoreChangedListener;
 import ConwayGameEngine.UniqueStateChangedListener;
+import de.floriansymmank.conwaysgameoflife.ConwayGameApp;
+import de.floriansymmank.conwaysgameoflife.ConwayGameComponent;
 import de.floriansymmank.conwaysgameoflife.DialogListener;
+import de.floriansymmank.conwaysgameoflife.NormalDrawer;
 import de.floriansymmank.conwaysgameoflife.R;
 import de.floriansymmank.conwaysgameoflife.databinding.ActivityGameBinding;
 import de.floriansymmank.conwaysgameoflife.fragments.SaveDialogFragment;
 import de.floriansymmank.conwaysgameoflife.fragments.ShareDialogFragment;
 
-public class GameActivity extends AppCompatActivity implements ScoreChangedListener, UniqueStateChangedListener, DialogListener {
+public class GameActivity extends ASAPActivity implements ScoreChangedListener, UniqueStateChangedListener, DialogListener {
 
     public static String CONWAYGAME_EXTRA = "CONWAYGAME_EXTRA";
 
@@ -57,19 +58,22 @@ public class GameActivity extends AppCompatActivity implements ScoreChangedListe
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ConwayGame g = null;
-        if ((g = (ConwayGame) getIntent().getSerializableExtra(CONWAYGAME_EXTRA)) != null) {
-            Toast.makeText(getApplicationContext(), "Score:  " + g.getGenerationScore().getScore(), Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getApplicationContext(), "Kein Spiel übergeben", Toast.LENGTH_SHORT).show();
-        }
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_game);
         binding.setLifecycleOwner(this);
 
-        facade = new ConwayGameEngineFacadeImpl(getFilesDir().getAbsolutePath());
+        facade = ConwayGameApp.getConwayGameApp().getConwayGameEngineFacade();
 
-        ConwayGame game = facade.createGame("", 0, 50, 50);
+        ConwayGame game = null;
+        if ((game = (ConwayGame) getIntent().getSerializableExtra(CONWAYGAME_EXTRA)) != null) {
+            Toast.makeText(getApplicationContext(), "Spiel übergeben", Toast.LENGTH_LONG).show();
+        } else {
+            game = facade.createGame(
+                    ConwayGameApp.getConwayGameApp().getPlayerName(),
+                    ConwayGameApp.getConwayGameApp().getPlayerID(),
+                    ConwayGameApp.getConwayGameApp().getWidth(),
+                    ConwayGameApp.getConwayGameApp().getHeight());
+        }
+
 
         binding.gameOfLife.initWorld(game);
         binding.setGame(game);
@@ -77,7 +81,7 @@ public class GameActivity extends AppCompatActivity implements ScoreChangedListe
         game.setScoreChangedListener(this);
         game.setUniqueStateChangedListener(this);
 
-        drawer = initDrawer();
+        drawer = NormalDrawer.createNormalDrawer(this);
         actionBar = initActionBar();
 
         setText(binding.deathScore, String.valueOf(game.getDeathScore().getScore()));
@@ -92,6 +96,9 @@ public class GameActivity extends AppCompatActivity implements ScoreChangedListe
 
         Drawable img = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_play_arrow_24);
         setImage(binding.fabControl, img);
+
+
+
     }
 
     private ActionBar initActionBar() {
@@ -133,37 +140,6 @@ public class GameActivity extends AppCompatActivity implements ScoreChangedListe
 
 
         return mActionBar;
-    }
-
-    private Drawer initDrawer() {
-
-        PrimaryDrawerItem i = new PrimaryDrawerItem();
-        SecondaryDrawerItem item1 = new SecondaryDrawerItem().withIdentifier(1).withName("New Conway's Game of Life");
-        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withIdentifier(2).withName("Saved Games");
-
-        return new DrawerBuilder()
-                .withActivity(this)
-                .withTranslucentStatusBar(false)
-                .withActionBarDrawerToggle(false)
-                .addDrawerItems(i, item1, item2)
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        switch ((int) drawerItem.getIdentifier()) {
-                            case 1:
-//                                Intent intent = new Intent(getApplicationContext(), GameActivity.class);
-//                                startActivity(intent);
-                                reset();
-                                break;
-                            case 2:
-                                Intent intent = new Intent(getApplicationContext(), SavedGamesListActivity.class);
-                                startActivity(intent);
-                                break;
-                        }
-                        return true;
-                    }
-                })
-                .build();
     }
 
     private void setImage(final FloatingActionButton fab, final Drawable img) {
@@ -224,7 +200,7 @@ public class GameActivity extends AppCompatActivity implements ScoreChangedListe
 
     @Override
     public void scoreRemoved(Score score) {
-
+        // no need to react
     }
 
     @Override
@@ -267,7 +243,15 @@ public class GameActivity extends AppCompatActivity implements ScoreChangedListe
     public void onDialogPositiveClick(DialogFragment dialogFragment) {
 
         if (dialogFragment instanceof ShareDialogFragment) {
-            // TODO: Share
+            FinalScore fs = ((ShareDialogFragment) dialogFragment).getScore();
+            byte[] serialized = ConwayGameEngine.Util.Serialize.finalScoreSerializer(fs);
+
+            try {
+                getASAPPeer().sendASAPMessage(ConwayGameComponent.APP_NAME, ConwayGameComponent.FINAL_SCORE_URI, serialized);
+            } catch (ASAPException ignored) {
+                Log.println(Log.DEBUG, "sendASAPMessage", "sendASAPMessage");
+            }
+
             reset();
         } else if (dialogFragment instanceof SaveDialogFragment) {
             try {
@@ -285,8 +269,7 @@ public class GameActivity extends AppCompatActivity implements ScoreChangedListe
     public void onDialogDismiss(DialogFragment dialogFragment) {
         if (dialogFragment instanceof ShareDialogFragment) {
             reset();
-        } else if (dialogFragment instanceof SaveDialogFragment) {
-
         }
     }
+
 }
