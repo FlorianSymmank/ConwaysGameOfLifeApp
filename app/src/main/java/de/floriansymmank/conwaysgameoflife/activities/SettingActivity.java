@@ -15,8 +15,8 @@ import com.mikepenz.materialdrawer.Drawer;
 import net.sharksystem.asap.android.apps.ASAPActivity;
 
 import ConwayGameEngine.ConwayGameEngineFacade;
-import de.floriansymmank.conwaysgameoflife.ConwayGameApp;
-import de.floriansymmank.conwaysgameoflife.NormalDrawer;
+import de.floriansymmank.conwaysgameoflife.asap.ConwayGameApp;
+import de.floriansymmank.conwaysgameoflife.utils.NormalDrawer;
 import de.floriansymmank.conwaysgameoflife.R;
 import de.floriansymmank.conwaysgameoflife.databinding.ActivitySettingsBinding;
 

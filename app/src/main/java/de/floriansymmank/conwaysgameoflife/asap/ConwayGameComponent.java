@@ -1,11 +1,9 @@
-package de.floriansymmank.conwaysgameoflife;
+package de.floriansymmank.conwaysgameoflife.asap;
 
 import net.sharksystem.ASAPFormats;
 import net.sharksystem.SharkComponent;
 import net.sharksystem.SharkException;
 import net.sharksystem.asap.ASAPPeer;
-
-import java.nio.charset.StandardCharsets;
 
 import ConwayGameEngine.ConwayGameEngineFacadeImpl;
 

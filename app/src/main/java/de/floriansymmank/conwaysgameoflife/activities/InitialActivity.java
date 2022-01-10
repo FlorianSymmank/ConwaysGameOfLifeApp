@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import de.floriansymmank.conwaysgameoflife.ConwayGameApp;
+import de.floriansymmank.conwaysgameoflife.asap.ConwayGameApp;
 import de.floriansymmank.conwaysgameoflife.databinding.ActivitySettingsBinding;
 
 public class InitialActivity extends Activity {

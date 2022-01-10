@@ -1,4 +1,4 @@
-package de.floriansymmank.conwaysgameoflife;
+package de.floriansymmank.conwaysgameoflife.utils;
 
 import android.app.Activity;
 import android.content.Intent;

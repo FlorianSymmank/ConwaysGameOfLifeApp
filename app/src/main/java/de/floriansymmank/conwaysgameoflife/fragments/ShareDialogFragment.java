@@ -12,7 +12,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import ConwayGameEngine.FinalScore;
-import de.floriansymmank.conwaysgameoflife.DialogListener;
 import de.floriansymmank.conwaysgameoflife.R;
 
 public class ShareDialogFragment extends DialogFragment {

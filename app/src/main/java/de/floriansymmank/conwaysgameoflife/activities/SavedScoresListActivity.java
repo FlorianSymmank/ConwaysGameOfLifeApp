@@ -7,7 +7,6 @@ import android.widget.ImageButton;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,8 +21,8 @@ import java.util.List;
 
 import ConwayGameEngine.ConwayGameEngineFacade;
 import ConwayGameEngine.FinalScore;
-import de.floriansymmank.conwaysgameoflife.ConwayGameApp;
-import de.floriansymmank.conwaysgameoflife.NormalDrawer;
+import de.floriansymmank.conwaysgameoflife.asap.ConwayGameApp;
+import de.floriansymmank.conwaysgameoflife.utils.NormalDrawer;
 import de.floriansymmank.conwaysgameoflife.R;
 import de.floriansymmank.conwaysgameoflife.adapter.SavedScoresListAdapter;
 import de.floriansymmank.conwaysgameoflife.databinding.ActivitySavedScoresListBinding;

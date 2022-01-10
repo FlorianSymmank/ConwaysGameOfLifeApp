@@ -1,4 +1,4 @@
-package de.floriansymmank.conwaysgameoflife;
+package de.floriansymmank.conwaysgameoflife.fragments;
 
 import androidx.fragment.app.DialogFragment;
 
@@ -12,6 +12,4 @@ public interface DialogListener {
 
     default void onDialogCancel(DialogFragment dialogFragment) {
     }
-
-    ;
 }

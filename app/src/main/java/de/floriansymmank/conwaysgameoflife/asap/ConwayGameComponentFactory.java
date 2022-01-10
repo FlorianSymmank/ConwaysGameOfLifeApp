@@ -1,4 +1,4 @@
-package de.floriansymmank.conwaysgameoflife;
+package de.floriansymmank.conwaysgameoflife.asap;
 
 import net.sharksystem.SharkComponent;
 import net.sharksystem.SharkComponentFactory;

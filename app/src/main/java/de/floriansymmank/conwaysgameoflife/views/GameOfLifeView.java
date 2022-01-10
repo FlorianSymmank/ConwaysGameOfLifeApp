@@ -18,7 +18,7 @@ import androidx.annotation.NonNull;
 
 import ConwayGameEngine.Cell;
 import ConwayGameEngine.ConwayGame;
-import de.floriansymmank.conwaysgameoflife.ConwayGameApp;
+import de.floriansymmank.conwaysgameoflife.asap.ConwayGameApp;
 
 public class GameOfLifeView extends SurfaceView implements Runnable {
 

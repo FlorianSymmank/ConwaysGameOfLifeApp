@@ -8,10 +8,8 @@ import android.widget.ImageButton;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.OnFlingListener;
 
 import com.mikepenz.materialdrawer.Drawer;
@@ -25,7 +23,7 @@ import java.util.List;
 import ConwayGameEngine.ConwayGame;
 import ConwayGameEngine.ConwayGameEngineFacade;
 import ConwayGameEngine.ConwayGameEngineFacadeImpl;
-import de.floriansymmank.conwaysgameoflife.NormalDrawer;
+import de.floriansymmank.conwaysgameoflife.utils.NormalDrawer;
 import de.floriansymmank.conwaysgameoflife.R;
 import de.floriansymmank.conwaysgameoflife.adapter.ListAdapterListener;
 import de.floriansymmank.conwaysgameoflife.adapter.SavedGamesListAdapter;
