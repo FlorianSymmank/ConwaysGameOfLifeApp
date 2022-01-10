@@ -1,6 +1,5 @@
 package de.floriansymmank.conwaysgameoflife.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.OnFlingListener;
 
 import com.mikepenz.materialdrawer.Drawer;
 
@@ -22,20 +20,20 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import ConwayGameEngine.ConwayGame;
 import ConwayGameEngine.ConwayGameEngineFacade;
-import ConwayGameEngine.ConwayGameEngineFacadeImpl;
+import ConwayGameEngine.FinalScore;
+import de.floriansymmank.conwaysgameoflife.ConwayGameApp;
 import de.floriansymmank.conwaysgameoflife.NormalDrawer;
 import de.floriansymmank.conwaysgameoflife.R;
-import de.floriansymmank.conwaysgameoflife.adapter.ListAdapterListener;
-import de.floriansymmank.conwaysgameoflife.adapter.SavedGamesListAdapter;
-import de.floriansymmank.conwaysgameoflife.databinding.ActivitySavedGamesListBinding;
+import de.floriansymmank.conwaysgameoflife.adapter.SavedScoresListAdapter;
+import de.floriansymmank.conwaysgameoflife.databinding.ActivitySavedScoresListBinding;
 
-public class SavedGamesListActivity extends ASAPActivity implements ListAdapterListener<ConwayGame> {
+public class SavedScoresListActivity extends ASAPActivity {
+    //TODO: ASAPActivity
 
     private ConwayGameEngineFacade facade;
-    private ActivitySavedGamesListBinding binding;
-    private SavedGamesListAdapter adapter;
+    private ActivitySavedScoresListBinding binding;
+    private SavedScoresListAdapter adapter;
 
     private Drawer drawer;
     private ActionBar actionBar;
@@ -44,10 +42,10 @@ public class SavedGamesListActivity extends ASAPActivity implements ListAdapterL
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_saved_games_list);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_saved_scores_list);
         binding.setLifecycleOwner(this);
 
-        facade = new ConwayGameEngineFacadeImpl(getFilesDir().getAbsolutePath());
+        facade = ConwayGameApp.getConwayGameApp().getConwayGameEngineFacade();
 
         drawer = NormalDrawer.createNormalDrawer(this);
         actionBar = initActionBar();
@@ -55,7 +53,7 @@ public class SavedGamesListActivity extends ASAPActivity implements ListAdapterL
         populateList();
         binding.recyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-        binding.recyclerview.setOnFlingListener(new OnFlingListener() {
+        binding.recyclerview.setOnFlingListener(new RecyclerView.OnFlingListener() {
             @Override
             public boolean onFling(int velocityX, int velocityY) {
                 populateList();
@@ -65,18 +63,19 @@ public class SavedGamesListActivity extends ASAPActivity implements ListAdapterL
     }
 
     private void populateList() {
-        List<ConwayGame> gameList = new LinkedList<>();
+        List<FinalScore> scores = new LinkedList<>();
         try {
-            gameList = facade.getAllGames();
-        } catch (IOException ignore) {
+            scores = facade.getAllScores();
+        } catch (IOException e) {
+
         }
 
-        if (gameList == null || gameList.size() == 0)
+        if (scores == null || scores.size() == 0)
             binding.tvNoItems.setVisibility(View.VISIBLE);
         else
             binding.tvNoItems.setVisibility(View.GONE);
 
-        adapter = new SavedGamesListAdapter(getApplicationContext(), this, gameList);
+        adapter = new SavedScoresListAdapter(getApplicationContext(), scores);
         binding.recyclerview.setAdapter(adapter);
     }
 
@@ -105,30 +104,12 @@ public class SavedGamesListActivity extends ASAPActivity implements ListAdapterL
         item2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                facade.deleteGames();
+                facade.deleteScores();
                 populateList();
             }
         });
 
 
         return mActionBar;
-    }
-
-    @Override
-    public void onRowClick(ConwayGame item) {
-
-    }
-
-    @Override
-    public void onRowLongClick(ConwayGame item) {
-
-    }
-
-    @Override
-    public void onButtonClick(ConwayGame item) {
-        finish();
-        Intent intent = new Intent(getApplicationContext(), GameActivity.class);
-        intent.putExtra(GameActivity.CONWAYGAME_EXTRA, item);
-        startActivity(intent);
     }
 }

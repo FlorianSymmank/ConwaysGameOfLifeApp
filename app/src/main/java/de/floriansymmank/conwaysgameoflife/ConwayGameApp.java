@@ -26,6 +26,9 @@ public class ConwayGameApp {
     public final static String DEFAULT_PLAYER_NAME = "PlayerOne";
     public final static int DEFAULT_GAME_WIDTH = 50;
     public final static int DEFAULT_GAME_HEIGHT = 50;
+    public final static int DEFAULT_GAME_INTERVAL = 300;
+    private final static String GAME_INTERVAL = "GAME_INTERVAL";
+    static boolean _________________DEBUG_________________ = false; // TODO:
     private static ConwayGameApp singleton;
     private final ConwayGameEngineFacade conwayGameEngineFacade;
     private SharkPeer sharkPeer;
@@ -35,6 +38,7 @@ public class ConwayGameApp {
     private int width = 0;
     private int height = 0;
     private String defaultDirectory = "";
+    private int interval = 0;
 
 
     private ConwayGameApp(Activity initialActivity) {
@@ -64,6 +68,14 @@ public class ConwayGameApp {
         else
             this.width = DEFAULT_GAME_WIDTH;
 
+
+        // Game width
+        if (sharedPref.contains(GAME_INTERVAL))
+            this.interval = sharedPref.getInt(GAME_INTERVAL, DEFAULT_GAME_INTERVAL);
+        else
+            this.interval = DEFAULT_GAME_INTERVAL;
+
+
         // Game height
         if (sharedPref.contains(GAME_HEIGHT))
             this.height = sharedPref.getInt(GAME_HEIGHT, DEFAULT_GAME_HEIGHT);
@@ -75,40 +87,41 @@ public class ConwayGameApp {
         if (ConwayGameApp.singleton == null) {
             ConwayGameApp.singleton = new ConwayGameApp(initialActivity);
 
-            try {
+            if (!_________________DEBUG_________________)
+                try {
 
-                // produce application side shark peer
-                ConwayGameApp.singleton.sharkPeer = new SharkPeerFS(
-                        getConwayGameApp().getOwnerID(),
-                        ConwayGameApp.singleton.getDefaultDirectory()
-                );
+                    // produce application side shark peer
+                    ConwayGameApp.singleton.sharkPeer = new SharkPeerFS(
+                            getConwayGameApp().getOwnerID(),
+                            ConwayGameApp.singleton.getDefaultDirectory()
+                    );
 
-                // create ConwayGameComponentFactory
-                ConwayGameComponentFactory factory =
-                        new ConwayGameComponentFactory(ConwayGameApp.singleton.getDefaultDirectory());
+                    // create ConwayGameComponentFactory
+                    ConwayGameComponentFactory factory =
+                            new ConwayGameComponentFactory(ConwayGameApp.singleton.getDefaultDirectory());
 
-                // register this component with shark peer
-                ConwayGameApp.singleton.sharkPeer.addComponent(factory, ConwayGameComponent.class);
+                    // register this component with shark peer
+                    ConwayGameApp.singleton.sharkPeer.addComponent(factory, ConwayGameComponent.class);
 
-                // setup android (application side peer)
-                ASAPAndroidPeer.initializePeer(
-                        getConwayGameApp().getOwnerID(),
-                        ConwayGameApp.singleton.sharkPeer.getFormats(),
-                        getConwayGameApp().getDefaultDirectory(),
-                        initialActivity);
+                    // setup android (application side peer)
+                    ASAPAndroidPeer.initializePeer(
+                            getConwayGameApp().getOwnerID(),
+                            ConwayGameApp.singleton.sharkPeer.getFormats(),
+                            getConwayGameApp().getDefaultDirectory(),
+                            initialActivity);
 
-                // launch service side
-                ASAPAndroidPeer applicationSideASAPPeer = ASAPAndroidPeer.startPeer(initialActivity);
+                    // launch service side
+                    ASAPAndroidPeer applicationSideASAPPeer = ASAPAndroidPeer.startPeer(initialActivity);
 
-                // use asap peer proxy for this app side shark peer
-                ConwayGameApp.singleton.sharkPeer.start(applicationSideASAPPeer);
+                    // use asap peer proxy for this app side shark peer
+                    ConwayGameApp.singleton.sharkPeer.start(applicationSideASAPPeer);
 
-                // remember
-                ConwayGameApp.singleton.setApplicationSideASAPAndroidPeer(applicationSideASAPPeer);
+                    // remember
+                    ConwayGameApp.singleton.setApplicationSideASAPAndroidPeer(applicationSideASAPPeer);
 
-            } catch (SharkException | IOException e) {
-                Log.println(Log.DEBUG, "ConwayGameApp", "error initializeConwayGameApp " + e.toString());
-            }
+                } catch (SharkException | IOException e) {
+                    Log.println(Log.DEBUG, "ConwayGameApp", "error initializeConwayGameApp " + e.toString());
+                }
         }
 
         return ConwayGameApp.singleton;
@@ -181,5 +194,24 @@ public class ConwayGameApp {
 
     private CharSequence getOwnerID() {
         return "O_ID_" + String.valueOf(getPlayerID());
+    }
+
+    public void setInterval(Context ctx, int interval) {
+        SharedPreferences sharedPref = ctx.getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(GAME_INTERVAL, interval);
+        editor.apply();
+
+        this.interval = interval;
+    }
+
+    public int getInterval() {
+        return interval;
+    }
+
+    public void resetSharedPreferences(Context ctx) {
+        SharedPreferences pref = ctx.getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE);
+        pref.edit().clear().commit();
     }
 }

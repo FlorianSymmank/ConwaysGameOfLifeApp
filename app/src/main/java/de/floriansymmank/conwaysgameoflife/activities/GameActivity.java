@@ -6,11 +6,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,6 +44,8 @@ import de.floriansymmank.conwaysgameoflife.fragments.ShareDialogFragment;
 
 public class GameActivity extends ASAPActivity implements ScoreChangedListener, UniqueStateChangedListener, DialogListener {
 
+    // TODO: ASAPActivity
+
     public static String CONWAYGAME_EXTRA = "CONWAYGAME_EXTRA";
 
     private ActivityGameBinding binding;
@@ -65,7 +65,6 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
 
         ConwayGame game = null;
         if ((game = (ConwayGame) getIntent().getSerializableExtra(CONWAYGAME_EXTRA)) != null) {
-            Toast.makeText(getApplicationContext(), "Spiel übergeben", Toast.LENGTH_LONG).show();
         } else {
             game = facade.createGame(
                     ConwayGameApp.getConwayGameApp().getPlayerName(),
@@ -96,9 +95,6 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
 
         Drawable img = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_play_arrow_24);
         setImage(binding.fabControl, img);
-
-
-
     }
 
     private ActionBar initActionBar() {
@@ -244,8 +240,16 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
 
         if (dialogFragment instanceof ShareDialogFragment) {
             FinalScore fs = ((ShareDialogFragment) dialogFragment).getScore();
+
+            try {
+                facade.saveScore(fs);
+            } catch (IOException ignored) {
+            }
+
             byte[] serialized = ConwayGameEngine.Util.Serialize.finalScoreSerializer(fs);
 
+
+            //TODO:
             try {
                 getASAPPeer().sendASAPMessage(ConwayGameComponent.APP_NAME, ConwayGameComponent.FINAL_SCORE_URI, serialized);
             } catch (ASAPException ignored) {
@@ -258,9 +262,7 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
                 String gameName = ((SaveDialogFragment) dialogFragment).getInputText();
                 binding.getGame().setName(gameName);
                 facade.saveGame(binding.getGame());
-                Toast.makeText(this, "Game Saved!", Toast.LENGTH_SHORT).show();
             } catch (IOException ignored) {
-                Toast.makeText(this, "GAME NOT SAVED", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -272,4 +274,9 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        binding.gameOfLife.stop();
+        super.onDestroy();
+    }
 }

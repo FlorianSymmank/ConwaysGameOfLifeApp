@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/drawable/baseline_delete_forever_24.xml" value="0.3609375" />
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/drawable/ic_baseline_play_arrow_24.xml" value="0.390625" />
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/drawable/ic_baseline_settings_backup_restore_24.xml" value="0.390625" />
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/drawable/ic_baseline_stop_24.xml" value="0.390625" />
@@ -14,6 +15,8 @@
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/activity_main.xml" value="0.5147744945567652" />
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/activity_main2.xml" value="0.5604166666666667" />
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/activity_saved_games_list.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/activity_saved_scores_list.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/activity_settings.xml" value="0.37447916666666664" />
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/app_bar_main.xml" value="0.5744791666666667" />
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/content_main.xml" value="0.5744791666666667" />
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/drawer_n_activity.xml" value="0.37447916666666664" />
@@ -29,8 +32,12 @@
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/my_dialog.xml" value="0.37447916666666664" />
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/name_input_dialog.xml" value="0.37447916666666664" />
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/nav_header_main.xml" value="0.5744791666666667" />
-        <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/row_saved_games_list.xml" value="0.4734375" />
+        <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/row_saved_games_list.xml" value="0.33" />
+        <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/row_saved_scores_list.xml" value="0.5" />
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/saved_games_list_toolbar.xml" value="0.37447916666666664" />
+        <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/saved_scores_list_list.xml" value="0.25925925925925924" />
+        <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/saved_scores_list_toolbar.xml" value="0.3212962962962963" />
+        <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/settings_toolbar.xml" value="0.37447916666666664" />
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/layout/toolbar.xml" value="0.37447916666666664" />
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/menu/activity_main_drawer.xml" value="0.5744791666666667" />
         <entry key="..\:/AndroidStudioProjects/ConwaysGameOfLifeApp/app/src/main/res/menu/game_menu.xml" value="0.475" />

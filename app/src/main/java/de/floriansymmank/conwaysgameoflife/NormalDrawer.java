@@ -12,6 +12,8 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import de.floriansymmank.conwaysgameoflife.activities.GameActivity;
 import de.floriansymmank.conwaysgameoflife.activities.SavedGamesListActivity;
+import de.floriansymmank.conwaysgameoflife.activities.SavedScoresListActivity;
+import de.floriansymmank.conwaysgameoflife.activities.SettingActivity;
 
 public class NormalDrawer implements Drawer.OnDrawerItemClickListener {
 
@@ -30,12 +32,13 @@ public class NormalDrawer implements Drawer.OnDrawerItemClickListener {
         SecondaryDrawerItem item1 = new SecondaryDrawerItem().withIdentifier(1).withName("New Conway's Game of Life");
         SecondaryDrawerItem item2 = new SecondaryDrawerItem().withIdentifier(2).withName("Saved Games");
         SecondaryDrawerItem item3 = new SecondaryDrawerItem().withIdentifier(3).withName("Saved Sores");
+        SecondaryDrawerItem item4 = new SecondaryDrawerItem().withIdentifier(4).withName("Settings");
 
         Drawer drawer = new DrawerBuilder()
                 .withActivity(activity)
                 .withTranslucentStatusBar(false)
                 .withActionBarDrawerToggle(false)
-                .addDrawerItems(i, item1, item2, item3)
+                .addDrawerItems(i, item1, item2, item3, item4)
                 .withOnDrawerItemClickListener(nd).build();
 
         nd.setDrawer(drawer);
@@ -49,21 +52,42 @@ public class NormalDrawer implements Drawer.OnDrawerItemClickListener {
 
     @Override
     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-
-        Intent intent;
         switch ((int) drawerItem.getIdentifier()) {
             case 1:
                 if (activity.getClass() == GameActivity.class)
                     drawer.closeDrawer();
-                else
+                else {
+                    activity.finish();
                     activity.startActivity(new Intent(activity.getApplicationContext(), GameActivity.class));
+                }
                 return true;
             case 2:
                 if (activity.getClass() == SavedGamesListActivity.class)
                     drawer.closeDrawer();
-                else
+                else {
+                    activity.finish();
                     activity.startActivity(new Intent(activity.getApplicationContext(), SavedGamesListActivity.class));
+                }
                 break;
+
+            case 3:
+                if (activity.getClass() == SavedScoresListActivity.class)
+                    drawer.closeDrawer();
+                else {
+                    activity.finish();
+                    activity.startActivity(new Intent(activity.getApplicationContext(), SavedScoresListActivity.class));
+                }
+                break;
+
+            case 4:
+                if (activity.getClass() == SettingActivity.class)
+                    drawer.closeDrawer();
+                else {
+                    activity.finish();
+                    activity.startActivity(new Intent(activity.getApplicationContext(), SettingActivity.class));
+                }
+                break;
+
             default:
                 return false;
 

@@ -19,18 +19,9 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@id/menutItem"
         android:paddingTop="11dp"
-        android:text="Saved Games"
+        android:text="Settings"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="@dimen/textSizeNormal" />
 
-    <ImageButton
-        android:id="@+id/deleteItem"
-        android:layout_width="?attr/actionBarSize"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:background="?attr/actionBarItemBackground"
-        android:scaleType="centerInside"
-        android:src="@drawable/baseline_delete_forever_white_24" />
 </RelativeLayout>

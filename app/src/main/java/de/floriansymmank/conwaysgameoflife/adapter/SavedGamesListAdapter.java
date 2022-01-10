@@ -40,14 +40,11 @@ public class SavedGamesListAdapter extends RecyclerView.Adapter<SavedGamesListAd
     @Override
     public void onBindViewHolder(@NonNull SavedGameViewHolder holder, int position) {
         ConwayGame current = gameList.get(position);
-        holder.tvGameName.setText(current.getName()); // TODO: Make ConwayGame nameable
+        holder.tvGameName.setText(current.getName());
 
-        String msg = MessageFormat.format("Death: {0} Gen: {1} Res: {2}",
-                current.getDeathScore().getScore(),
-                current.getGenerationScore().getScore(),
-                current.getResurrectionScore().getScore());
-
-        holder.tvScore.setText(msg);
+        holder.tvDeathScore.setText("DeathScore: " + current.getDeathScore().getScore());
+        holder.tvGenScore.setText("GenScore: " + current.getGenerationScore().getScore());
+        holder.tvResScore.setText("ResScores: " + current.getResurrectionScore().getScore());
 
         holder.row_saved_games_list.setOnClickListener(view -> listener.onRowClick(current));
         holder.row_saved_games_list.setOnLongClickListener(view -> {
@@ -69,14 +66,19 @@ public class SavedGamesListAdapter extends RecyclerView.Adapter<SavedGamesListAd
     public class SavedGameViewHolder extends RecyclerView.ViewHolder {
 
         public final TextView tvGameName;
-        public final TextView tvScore;
+        public final TextView tvGenScore;
+        public final TextView tvResScore;
+        public final TextView tvDeathScore;
+
         public final Button btnStartGame;
         public final ConstraintLayout row_saved_games_list;
 
         public SavedGameViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             tvGameName = itemView.findViewById(R.id.tvGameName);
-            tvScore = itemView.findViewById(R.id.tvScore);
+            tvGenScore = itemView.findViewById(R.id.tvGenScore);
+            tvResScore = itemView.findViewById(R.id.tvResScore);
+            tvDeathScore = itemView.findViewById(R.id.tvDeathScore);
             btnStartGame = itemView.findViewById(R.id.btnStartGame);
             row_saved_games_list = itemView.findViewById(R.id.row_saved_games_list);
         }

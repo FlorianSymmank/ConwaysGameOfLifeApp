@@ -5,6 +5,8 @@ import net.sharksystem.SharkComponent;
 import net.sharksystem.SharkException;
 import net.sharksystem.asap.ASAPPeer;
 
+import java.nio.charset.StandardCharsets;
+
 import ConwayGameEngine.ConwayGameEngineFacadeImpl;
 
 @ASAPFormats(formats = {ConwayGameComponent.FINAL_SCORE_URI})

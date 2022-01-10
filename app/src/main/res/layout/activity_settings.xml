@@ -19,7 +19,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/et_name"
+            android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/small_padding"
@@ -40,11 +40,11 @@
             android:layout_marginEnd="@dimen/small_padding"
             android:text="height"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_name" />
+            app:layout_constraintTop_toBottomOf="@id/etName" />
 
 
         <EditText
-            android:id="@+id/et_height"
+            android:id="@+id/etHeight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/small_padding"
@@ -65,11 +65,11 @@
             android:layout_marginEnd="@dimen/small_padding"
             android:text="width"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_height" />
+            app:layout_constraintTop_toBottomOf="@id/etHeight" />
 
 
         <EditText
-            android:id="@+id/et_width"
+            android:id="@+id/etWidth"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/small_padding"
@@ -82,6 +82,33 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvWidth" />
 
+
+        <TextView
+            android:id="@+id/tvInterval"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/small_padding"
+            android:layout_marginEnd="@dimen/small_padding"
+            android:text="interval in ms"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etWidth" />
+
+
+        <EditText
+            android:id="@+id/etInterval"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/small_padding"
+            android:layout_marginEnd="@dimen/small_padding"
+            android:ems="10"
+            android:hint="Interval"
+            android:inputType="number"
+            android:minHeight="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvInterval" />
+
+
         <Button
             android:id="@+id/btnSave"
             android:layout_width="match_parent"
@@ -91,7 +118,19 @@
             android:text="Save"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_width" />
+            app:layout_constraintTop_toBottomOf="@id/etInterval" />
+
+        <Button
+            android:id="@+id/btnResetEverything"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/small_padding"
+            android:layout_marginEnd="@dimen/small_padding"
+            android:text="Reset Everything and Save"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnSave" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

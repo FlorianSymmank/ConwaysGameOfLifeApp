@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 
 import ConwayGameEngine.Cell;
 import ConwayGameEngine.ConwayGame;
+import de.floriansymmank.conwaysgameoflife.ConwayGameApp;
 
 public class GameOfLifeView extends SurfaceView implements Runnable {
 
@@ -64,7 +65,7 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
                 continue;
 
             try {
-                Thread.sleep(300);
+                Thread.sleep(ConwayGameApp.getConwayGameApp().getInterval());
             } catch (InterruptedException ignored) {
             }
 
@@ -121,6 +122,8 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
 
     private void drawCells() {
         Canvas canvas = getHolder().lockCanvas();
+
+        if (canvas == null) return;
 
         Log.println(Log.DEBUG, "drawCells", "Drawing now");
         for (int i = 0; i < game.getRows(); i++) {

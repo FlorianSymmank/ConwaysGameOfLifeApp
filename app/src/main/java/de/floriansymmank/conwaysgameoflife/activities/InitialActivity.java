@@ -3,18 +3,13 @@ package de.floriansymmank.conwaysgameoflife.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
-
-import androidx.databinding.DataBindingUtil;
 
 import de.floriansymmank.conwaysgameoflife.ConwayGameApp;
-import de.floriansymmank.conwaysgameoflife.R;
-import de.floriansymmank.conwaysgameoflife.databinding.ActivityInitialBinding;
+import de.floriansymmank.conwaysgameoflife.databinding.ActivitySettingsBinding;
 
 public class InitialActivity extends Activity {
 
-    private ActivityInitialBinding binding;
+    private ActivitySettingsBinding binding;
     private ConwayGameApp conwayGameApp;
 
     @Override
@@ -24,51 +19,21 @@ public class InitialActivity extends Activity {
         conwayGameApp = ConwayGameApp.initializeConwayGameApp(this);
 
         if (getSharedPreferences(ConwayGameApp.PREFERENCES_FILE, MODE_PRIVATE).contains(ConwayGameApp.PLAYER_NAME)) {
-            lauchFirstActivity();
-        }
-
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_initial);
-        binding.btnSave.setOnClickListener(btnSaveClick());
-        binding.etHeight.setText(String.valueOf(ConwayGameApp.DEFAULT_GAME_HEIGHT));
-        binding.etWidth.setText(String.valueOf(ConwayGameApp.DEFAULT_GAME_WIDTH));
+            launchFirstActivity();
+        } else
+            launchSettingsActivity();
     }
 
-    private void lauchFirstActivity() {
-        Class realFirstActivity = GameActivity.class;
+    private void launchFirstActivity() {
         this.finish();
-        Intent intent = new Intent(this, realFirstActivity);
+        Intent intent = new Intent(this, GameActivity.class);
         this.startActivity(intent);
     }
 
-    private View.OnClickListener btnSaveClick() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (binding.etName.getText().toString().isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Player Name is needed", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (binding.etHeight.getText().toString().isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "height is needed", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (binding.etWidth.getText().toString().isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Width is needed", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                conwayGameApp.setPlayerName(getApplicationContext(), binding.etName.getText().toString());
-                conwayGameApp.setHeight(getApplicationContext(), Integer.parseInt(binding.etHeight.getText().toString()));
-                conwayGameApp.setHeight(getApplicationContext(), Integer.parseInt(binding.etWidth.getText().toString()));
-
-                lauchFirstActivity();
-            }
-        };
+    private void launchSettingsActivity() {
+        this.finish();
+        Intent intent = new Intent(this, SettingActivity.class);
+        intent.putExtra(SettingActivity.FIRST_LAUNCH, true);
+        this.startActivity(intent);
     }
-
-
-    // SharedPreferences.Editor.clear()
-    // SharedPreferences.Editor.commit()
 }

@@ -30,28 +30,34 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
         <activity
             android:name=".activities.MainActivity"
             android:exported="false">
-            <!--            android:label="@string/title_activity_main"-->
-            <!--            android:theme="@style/Theme.ConwaysGameOfLife.NoActionBar">-->
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN" />-->
-            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-            <!--            </intent-filter>-->
+
+            <!-- android:label="@string/title_activity_main" -->
+            <!-- android:theme="@style/Theme.ConwaysGameOfLife.NoActionBar"> -->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
-
-
         <activity
             android:name=".activities.GameActivity"
             android:exported="false" />
         <activity
             android:name=".activities.SavedGamesListActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.SavedScoresListActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.SettingActivity"
             android:exported="false" />
 
     </application>
