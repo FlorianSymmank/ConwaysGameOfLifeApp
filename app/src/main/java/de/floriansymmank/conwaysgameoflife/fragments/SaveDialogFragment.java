@@ -39,19 +39,19 @@ public class SaveDialogFragment extends DialogFragment {
 
         View view = inflater.inflate(R.layout.name_input_dialog, null);
         edInput = (EditText) view.findViewById(R.id.et_name);
-        edInput.setHint("Name des Spiels");
+        edInput.setHint(R.string.NameGameHint);
         builder.setView(view);
 
-        String message = "Wollen Sie den akutellen Zustand speichern?";
+        String message = getString(R.string.SaveStateQuestion);
 
-        builder.setTitle("Speichern?")
+        builder.setTitle(getString(R.string.Save) + "?")
                 .setMessage(message)
-                .setPositiveButton("Speichern!", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.Save) + "!", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         listener.onDialogPositiveClick(SaveDialogFragment.this);
                     }
                 })
-                .setNegativeButton("Nö", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         listener.onDialogNegativeClick(SaveDialogFragment.this);
                     }

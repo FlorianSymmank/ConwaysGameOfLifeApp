@@ -19,7 +19,7 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@id/menutItem"
         android:paddingTop="11dp"
-        android:text="Settings"
+        android:text="@string/Settings"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="@dimen/textSizeNormal" />

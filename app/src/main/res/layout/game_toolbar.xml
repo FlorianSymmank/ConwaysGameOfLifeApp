@@ -18,11 +18,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@id/menutItem"
-        android:paddingTop="11dp"
-        android:text="Conway's Game of Life"
+        android:paddingTop="15dp"
+        android:text="@string/ConwaysGameOfLife"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="@dimen/textSizeNormal" />
+        android:textSize="@dimen/textSizeSmall" />
 
     <ImageButton
         android:id="@+id/resetItem"
@@ -39,7 +39,7 @@
         android:layout_width="?attr/actionBarSize"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:background="?attr/actionBarItemBackground"
         android:scaleType="centerInside"
         android:src="@drawable/baseline_save_white_24" />

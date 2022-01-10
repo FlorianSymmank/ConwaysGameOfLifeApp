@@ -13,4 +13,37 @@
     <string name="menu_slideshow">Slideshow</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="EnterYourUserName">Please enter your username.</string>
+    <string name="EnterAmountVCells">Please enter amount of vertical cells.</string>
+    <string name="EnterAmountHCells">Please enter amount of horizontal cells.</string>
+    <string name="EnterUpdateInterval">Please enter update interval.</string>
+    <string name="InvalidInterval">Invalid interval value (must be between 1 and 5000)</string>
+    <string name="DeathScore">Death Score</string>
+    <string name="GenScore">Generation Score</string>
+    <string name="ResScore">Resurrection Score</string>
+    <string name="Date">Date</string>
+    <string name="SaveStateQuestion">Do you want to save the current state?</string>
+    <string name="SaveTitle">Save?</string>
+    <string name="Save">Save</string>
+    <string name="No">No</string>
+    <string name="NameGameHint">Name your game</string>
+    <string name="ShareThisResult">Share this Result?</string>
+    <string name="Share">Share</string>
+    <string name="NewConwaysGame">New Conway\'s Game of Life</string>
+    <string name="SavedGames">Saved Games</string>
+    <string name="SavedScores">Saved Sores</string>
+    <string name="Settings">Settings</string>
+    <string name="GameControl">GameControl</string>
+    <string name="NoSavedGamesFound">No Saved Games Found</string>
+    <string name="NoSavedScoresFound">No Saved Scores Found</string>
+    <string name="Username">Username</string>
+    <string name="NumberOfVerticalCells">Number of vertical cells</string>
+    <string name="NumberOfHorizontalCells">Number of horizontal cells</string>
+    <string name="IntervalInMs">Interval in MS</string>
+    <string name="ResetEverythingAndSave">Reset Everything and Save</string>
+    <string name="ConwaysGameOfLife">Conway\'s Game of Life</string>
+    <string name="input">Input…</string>
+    <string name="LoadGame">Load\nGame</string>
+    <string name="GameName">GameName</string>
+    <string name="PlayerName">PlayerName</string>
 </resources>

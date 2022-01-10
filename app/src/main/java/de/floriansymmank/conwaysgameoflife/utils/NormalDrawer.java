@@ -11,6 +11,7 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import de.floriansymmank.conwaysgameoflife.R;
 import de.floriansymmank.conwaysgameoflife.activities.GameActivity;
 import de.floriansymmank.conwaysgameoflife.activities.SavedGamesListActivity;
 import de.floriansymmank.conwaysgameoflife.activities.SavedScoresListActivity;
@@ -34,10 +35,10 @@ public class NormalDrawer implements Drawer.OnDrawerItemClickListener {
         NormalDrawer nd = new NormalDrawer(activity);
 
         PrimaryDrawerItem i = new PrimaryDrawerItem();
-        SecondaryDrawerItem item1 = new SecondaryDrawerItem().withIdentifier(1).withName("New Conway's Game of Life");
-        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withIdentifier(2).withName("Saved Games");
-        SecondaryDrawerItem item3 = new SecondaryDrawerItem().withIdentifier(3).withName("Saved Sores");
-        SecondaryDrawerItem item4 = new SecondaryDrawerItem().withIdentifier(4).withName("Settings");
+        SecondaryDrawerItem item1 = new SecondaryDrawerItem().withIdentifier(1).withName(R.string.NewConwaysGame);
+        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withIdentifier(2).withName(R.string.SavedGames);
+        SecondaryDrawerItem item3 = new SecondaryDrawerItem().withIdentifier(3).withName(R.string.SavedScores);
+        SecondaryDrawerItem item4 = new SecondaryDrawerItem().withIdentifier(4).withName(R.string.Settings);
 
         Drawer drawer = new DrawerBuilder()
                 .withActivity(activity)

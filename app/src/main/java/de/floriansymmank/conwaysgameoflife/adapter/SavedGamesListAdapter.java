@@ -21,9 +21,11 @@ import de.floriansymmank.conwaysgameoflife.R;
 public class SavedGamesListAdapter extends RecyclerView.Adapter<SavedGamesListAdapter.SavedGameViewHolder> {
 
     private List<ConwayGame> gameList;
+    private Context context;
     private ListAdapterListener<ConwayGame> listener;
 
     public SavedGamesListAdapter(Context context, ListAdapterListener<ConwayGame> listener, List<ConwayGame> itemsList) {
+        this.context = context;
         this.listener = listener;
         this.gameList = itemsList;
     }
@@ -40,9 +42,17 @@ public class SavedGamesListAdapter extends RecyclerView.Adapter<SavedGamesListAd
         ConwayGame current = gameList.get(position);
         holder.tvGameName.setText(current.getName());
 
-        holder.tvDeathScore.setText("DeathScore: " + current.getDeathScore().getScore());
-        holder.tvGenScore.setText("GenScore: " + current.getGenerationScore().getScore());
-        holder.tvResScore.setText("ResScores: " + current.getResurrectionScore().getScore());
+        holder.tvDeathScore.setText(String.format("%s: %d",
+                context.getString(R.string.DeathScore),
+                current.getDeathScore().getScore()));
+
+        holder.tvGenScore.setText(String.format("%s: %d",
+                context.getString(R.string.GenScore),
+                current.getGenerationScore().getScore()));
+
+        holder.tvResScore.setText(String.format("%s: %d",
+                context.getString(R.string.ResScore),
+                current.getResurrectionScore().getScore()));
 
         holder.row_saved_games_list.setOnClickListener(view -> listener.onRowClick(current));
         holder.row_saved_games_list.setOnLongClickListener(view -> {

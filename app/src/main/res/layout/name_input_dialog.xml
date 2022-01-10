@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/big_padding"
         android:layout_marginEnd="@dimen/big_padding"
-        android:hint="Set Name"
+        android:hint="@string/input"
         android:inputType="text" />
 
 </LinearLayout>

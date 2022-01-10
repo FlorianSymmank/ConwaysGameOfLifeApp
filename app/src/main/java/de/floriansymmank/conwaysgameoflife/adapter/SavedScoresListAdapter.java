@@ -20,9 +20,11 @@ import de.floriansymmank.conwaysgameoflife.R;
 
 public class SavedScoresListAdapter extends RecyclerView.Adapter<SavedScoresListAdapter.SavedScoresViewHolder> {
 
+    private Context context;
     private List<FinalScore> scoresList;
 
     public SavedScoresListAdapter(Context context, List<FinalScore> itemsList) {
+        this.context = context;
         this.scoresList = itemsList;
     }
 
@@ -38,10 +40,21 @@ public class SavedScoresListAdapter extends RecyclerView.Adapter<SavedScoresList
         FinalScore current = scoresList.get(position);
         holder.tvPlayerName.setText(current.getPlayerName());
 
-        holder.tvGenScore.setText("GenScore: " + current.getGenerationScore());
-        holder.tvDeathScore.setText("DeathScore: " + current.getDeathScore());
-        holder.tvResScore.setText("ResScore: " + current.getResurrectionScore());
-        holder.tvDate.setText("Date: " + DateTimeFormatter.ofPattern("dd.MM.yyyy").format(current.getDate()));
+        holder.tvGenScore.setText(String.format("%s: %d",
+                context.getText(R.string.GenScore),
+                current.getGenerationScore()));
+
+        holder.tvDeathScore.setText(String.format("%s: %d",
+                context.getText(R.string.DeathScore),
+                current.getDeathScore()));
+
+        holder.tvResScore.setText(String.format("%s: %d",
+                context.getText(R.string.ResScore),
+                current.getResurrectionScore()));
+
+        holder.tvDate.setText(String.format("%s: %s",
+                context.getText(R.string.Date),
+                DateTimeFormatter.ofPattern("dd.MM.yyyy").format(current.getDate())));
     }
 
     @Override

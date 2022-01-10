@@ -90,7 +90,7 @@ public class SavedGamesListActivity extends ASAPActivity implements ListAdapterL
         mActionBar.setDisplayShowTitleEnabled(false);
         LayoutInflater li = LayoutInflater.from(this);
 
-        View toolbar = li.inflate(R.layout.saved_scores_list_toolbar, null);
+        View toolbar = li.inflate(R.layout.saved_games_list_toolbar, null);
         mActionBar.setCustomView(toolbar);
         mActionBar.setDisplayShowCustomEnabled(true);
 

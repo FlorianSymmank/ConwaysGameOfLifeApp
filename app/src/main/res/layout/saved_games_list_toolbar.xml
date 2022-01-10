@@ -19,7 +19,7 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@id/menutItem"
         android:paddingTop="11dp"
-        android:text="Saved Games"
+        android:text="@string/SavedGames"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="@dimen/textSizeNormal" />

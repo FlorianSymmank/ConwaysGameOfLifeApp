@@ -48,16 +48,19 @@ public class ShareDialogFragment extends DialogFragment {
             builder.setView(view);
         }
 
-        String message = "gen: " + score.getGenerationScore() + " res: " + score.getResurrectionScore() + " deaths: " + score.getDeathScore();
+        String message = String.format("%s:%d\n %s: %d\n %s: %d",
+                getString(R.string.GenScore), score.getGenerationScore(),
+                getString(R.string.ResScore), score.getResurrectionScore(),
+                getString(R.string.DeathScore), score.getDeathScore());
 
-        builder.setTitle("Share this Result?")
+        builder.setTitle(getString(R.string.ShareThisResult))
                 .setMessage(message)
-                .setPositiveButton("Share!", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.Share) + "!", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         listener.onDialogPositiveClick(ShareDialogFragment.this);
                     }
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         listener.onDialogNegativeClick(ShareDialogFragment.this);
                     }

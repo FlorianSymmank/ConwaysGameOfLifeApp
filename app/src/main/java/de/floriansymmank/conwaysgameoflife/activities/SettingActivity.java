@@ -114,27 +114,27 @@ public class SettingActivity extends ASAPActivity {
                 // basic input validation
                 // TODO: maybe redo input validation later
                 if (binding.etName.getText().toString().isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Player Name is needed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getText(R.string.EnterYourUserName), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (binding.etHeight.getText().toString().isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "height is needed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getText(R.string.EnterAmountVCells), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (binding.etWidth.getText().toString().isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Width is needed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getText(R.string.EnterAmountHCells), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (binding.etInterval.getText().toString().isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "interval is needed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getText(R.string.EnterUpdateInterval), Toast.LENGTH_SHORT).show();
                     return;
                 } else {
                     int interval = Integer.parseInt(binding.etInterval.getText().toString());
                     if (interval < 1 || interval > 5000) {
-                        Toast.makeText(getApplicationContext(), "Ungültiger Wert, muss zwischen 1 und 5000 ms liegen", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), getApplicationContext().getText(R.string.InvalidInterval), Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }

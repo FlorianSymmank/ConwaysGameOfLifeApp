@@ -22,7 +22,7 @@
             android:id="@+id/tvNoItems"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No Saved Scores Found"
+            android:text="@string/NoSavedScoresFound"
             android:textSize="20sp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
