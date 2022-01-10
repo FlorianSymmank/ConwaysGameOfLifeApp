@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
 import de.floriansymmank.conwaysgameoflife.asap.ConwayGameApp;
 import de.floriansymmank.conwaysgameoflife.databinding.ActivitySettingsBinding;
@@ -28,8 +29,10 @@ public class InitialActivity extends Activity {
         // if PLAYER_NAME is in sharePreferences, app was started beforehand, no need to send user to settings menu
         if (getSharedPreferences(ConwayGameApp.PREFERENCES_FILE, MODE_PRIVATE).contains(ConwayGameApp.PLAYER_NAME)) {
             launchFirstActivity();
-        } else
+        } else {
+            Log.println(Log.DEBUG, "InitialActivity onCreate", "App opened for the first time");
             launchSettingsActivity();
+        }
     }
 
     private void launchFirstActivity() {

@@ -144,6 +144,9 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
 
     // public because layout uses this
     public void controlGame(View view) {
+
+        Log.println(Log.DEBUG, "GameActivity controlGame", "user interacted with fab");
+
         if (binding.gameOfLife.isRunning())
             stop();
         else if (binding.getGame().isUnique()) {
@@ -158,6 +161,7 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
         binding.gameOfLife.reset();
         Drawable img = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_play_arrow_24);
         setImage(binding.fabControl, img);
+        Log.println(Log.DEBUG, "GameActivity reset", "game reset");
     }
 
     private void stop() {
@@ -165,6 +169,7 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
         binding.gameOfLife.stop();
         Drawable img = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_play_arrow_24);
         setImage(binding.fabControl, img);
+        Log.println(Log.DEBUG, "GameActivity stop", "game stopped");
     }
 
     private void start() {
@@ -172,6 +177,7 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
         binding.gameOfLife.start();
         Drawable img = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_stop_24);
         setImage(binding.fabControl, img);
+        Log.println(Log.DEBUG, "GameActivity start", "game started");
     }
 
     @Override
@@ -205,6 +211,7 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
 
     @Override
     public void uniqueChanged(boolean unique) {
+        Log.println(Log.DEBUG, "GameActivity uniqueChanged", "unique changed: now " + unique);
         if (unique) {
             Drawable img = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_play_arrow_24);
             setImage(binding.fabControl, img);
@@ -218,6 +225,7 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
 
     private void showShareDialog(FinalScore score) {
         // show user an dialog, does user want to share the result?
+        Log.println(Log.DEBUG, "GameActivity showShareDialog", "user is shown the share dialog");
         FragmentTransaction ft = getFragmentTransaction(ShareDialogFragment.SHARE_DIALOG_FRAGMENT_TAG);
         DialogFragment newFragment = ShareDialogFragment.newInstance(score, this, false);
         newFragment.show(ft, ShareDialogFragment.SHARE_DIALOG_FRAGMENT_TAG);
@@ -225,6 +233,7 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
 
     private void showSaveDialog() {
         // show user an save dialog to save the current game
+        Log.println(Log.DEBUG, "GameActivity showSaveDialog", "user is shown the save dialog");
         stop();
         FragmentTransaction ft = getFragmentTransaction(SaveDialogFragment.SAVE_DIALOG_FRAGMENT_TAG);
         DialogFragment newFragment = SaveDialogFragment.newInstance(this);
@@ -251,6 +260,8 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
 
         // dialog was share dialog
         if (dialogFragment instanceof ShareDialogFragment) {
+            Log.println(Log.DEBUG, "GameActivity onDialogPositiveClick", "Dialog was share dialog");
+
             FinalScore fs = ((ShareDialogFragment) dialogFragment).getScore();
 
             // Save score locally
@@ -270,6 +281,8 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
             reset();
         } else if (dialogFragment instanceof SaveDialogFragment) {
             // dialog as save dialog
+            Log.println(Log.DEBUG, "GameActivity onDialogPositiveClick", "Dialog was share SaveDialogFragment");
+
             try {
                 // save game state locally, get user input as game name
                 String gameName = ((SaveDialogFragment) dialogFragment).getInputText();
@@ -282,6 +295,8 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
 
     @Override
     public void onDialogDismiss(DialogFragment dialogFragment) {
+        Log.println(Log.DEBUG, "GameActivity onDialogDismiss", "Dialog was dismissed");
+
         // even if user declined share reset current game
         if (dialogFragment instanceof ShareDialogFragment) {
             reset();

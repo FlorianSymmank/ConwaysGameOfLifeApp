@@ -1,6 +1,7 @@
 package de.floriansymmank.conwaysgameoflife.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -63,6 +64,7 @@ public class SavedScoresListActivity extends ASAPActivity {
     }
 
     private void populateList() {
+        Log.println(Log.DEBUG, "SavedScoresListActivity populateList", "List populated");
         // get all scores and display them
         List<FinalScore> scores = new LinkedList<>();
         try {

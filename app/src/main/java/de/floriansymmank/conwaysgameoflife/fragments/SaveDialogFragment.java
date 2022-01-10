@@ -3,6 +3,7 @@ package de.floriansymmank.conwaysgameoflife.fragments;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -26,6 +27,7 @@ public class SaveDialogFragment extends DialogFragment {
     }
 
     public static DialogFragment newInstance(DialogListener listener) {
+        Log.println(Log.DEBUG, "SaveDialogFragment newInstance", "creating new Save Dialog instance");
         return new SaveDialogFragment(listener);
     }
 
@@ -73,6 +75,4 @@ public class SaveDialogFragment extends DialogFragment {
         super.onDismiss(dialog);
         listener.onDialogDismiss(this);
     }
-
-
 }

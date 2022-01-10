@@ -89,6 +89,7 @@ public class ConwayGameApp {
 
     public static ConwayGameApp initializeConwayGameApp(Activity initialActivity) {
         if (ConwayGameApp.singleton == null) {
+            Log.println(Log.DEBUG, "ConwayGameApp initializeConwayGameApp", "creating ConwayApp singleton");
             ConwayGameApp.singleton = new ConwayGameApp(initialActivity);
 
             try {
@@ -138,9 +139,6 @@ public class ConwayGameApp {
     }
 
     private void setApplicationSideASAPAndroidPeer(ASAPAndroidPeer applicationSideASAPPeer) {
-        if (this.asapAndroidPeer == null)
-            throw new RuntimeException("asapAndroidPeer not initialized yet!");
-
         this.asapAndroidPeer = applicationSideASAPPeer;
     }
 
@@ -219,6 +217,7 @@ public class ConwayGameApp {
     }
 
     public void resetSharedPreferences(Context ctx) {
+        Log.println(Log.DEBUG, "ConwayGameApp resetSharedPreferences", "resetting shared prefs");
         SharedPreferences pref = ctx.getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE);
         pref.edit().clear().commit();
     }

@@ -1,5 +1,7 @@
 package de.floriansymmank.conwaysgameoflife.asap;
 
+import android.util.Log;
+
 import net.sharksystem.ASAPFormats;
 import net.sharksystem.SharkComponent;
 import net.sharksystem.SharkException;
@@ -20,6 +22,7 @@ public class ConwayGameComponent extends ConwayGameEngineFacadeImpl implements S
     @Override
     public void onStart(ASAPPeer asapPeer) throws SharkException {
         // register message receiver
+        Log.println(Log.DEBUG, "ConwayGameComponent onStart", "ASAPPeer created");
         asapPeer.addASAPMessageReceivedListener(APP_NAME, new FinalScoreMessageReceivedListener());
     }
 }

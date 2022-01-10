@@ -3,6 +3,7 @@ package de.floriansymmank.conwaysgameoflife.fragments;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -31,6 +32,7 @@ public class ShareDialogFragment extends DialogFragment {
     }
 
     public static DialogFragment newInstance(FinalScore score, DialogListener listener, boolean hasTextInput) {
+        Log.println(Log.DEBUG, "ShareDialogFragment newInstance", "creating new share Dialog instance");
         return new ShareDialogFragment(score, listener, hasTextInput);
     }
 

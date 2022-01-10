@@ -2,6 +2,7 @@ package de.floriansymmank.conwaysgameoflife.utils;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 
 import com.mikepenz.materialdrawer.Drawer;
@@ -21,12 +22,15 @@ public class NormalDrawer implements Drawer.OnDrawerItemClickListener {
     private final Activity activity;
     private Drawer drawer;
 
-    public NormalDrawer(Activity activity) {
+    private NormalDrawer(Activity activity) {
         this.activity = activity;
     }
 
     // helper method to create identical drawers
     public static Drawer createNormalDrawer(Activity activity) {
+
+        Log.println(Log.DEBUG, "NormalDrawer createNormalDrawer", "creating new Drawer");
+
         NormalDrawer nd = new NormalDrawer(activity);
 
         PrimaryDrawerItem i = new PrimaryDrawerItem();

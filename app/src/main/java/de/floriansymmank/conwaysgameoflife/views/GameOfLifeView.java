@@ -63,6 +63,8 @@ public class GameOfLifeView extends SurfaceView implements Runnable {
     }
 
     public void initWorld(ConwayGame game) {
+        Log.println(Log.DEBUG, "GameOfLifeView initWorld", "initializing view ...");
+
         // calculate cell sizes by getting amount of cells to draw in correlation to available space
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();

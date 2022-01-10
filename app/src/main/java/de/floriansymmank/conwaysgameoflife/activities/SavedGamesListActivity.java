@@ -2,6 +2,7 @@ package de.floriansymmank.conwaysgameoflife.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -65,6 +66,8 @@ public class SavedGamesListActivity extends ASAPActivity implements ListAdapterL
     }
 
     private void populateList() {
+        Log.println(Log.DEBUG, "SavedGamesListActivity populateList", "List populated");
+
         // get all currently available games, and display them
         List<ConwayGame> gameList = new LinkedList<>();
         try {
@@ -130,6 +133,7 @@ public class SavedGamesListActivity extends ASAPActivity implements ListAdapterL
     @Override
     public void onButtonClick(ConwayGame item) {
         // open clicked game
+        Log.println(Log.DEBUG, "SavedGamesListActivity onButtonClick", "Saved ConwayGame chosen");
         finish();
         Intent intent = new Intent(getApplicationContext(), GameActivity.class);
         intent.putExtra(GameActivity.CONWAYGAME_EXTRA, item);
