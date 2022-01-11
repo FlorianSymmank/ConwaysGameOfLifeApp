@@ -8,6 +8,7 @@ import android.util.Log;
 import net.sharksystem.SharkException;
 import net.sharksystem.SharkPeer;
 import net.sharksystem.SharkPeerFS;
+import net.sharksystem.asap.android.apps.ASAPActivity;
 import net.sharksystem.asap.android.apps.ASAPAndroidPeer;
 
 import java.io.IOException;
@@ -45,6 +46,7 @@ public class ConwayGameApp {
     private int height = 0;
     private String defaultDirectory = "";
     private int interval = 0;
+    private boolean bluetoothStarted = false;
 
     private ConwayGameApp(Activity initialActivity) {
 
@@ -52,6 +54,7 @@ public class ConwayGameApp {
         conwayGameEngineFacade = new ConwayGameEngineFacadeImpl(defaultDirectory);
 
         SharedPreferences sharedPref = initialActivity.getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE);
+
 
         // load(default if not set) shared prefs
 
@@ -220,5 +223,15 @@ public class ConwayGameApp {
         Log.println(Log.DEBUG, "ConwayGameApp resetSharedPreferences", "resetting shared prefs");
         SharedPreferences pref = ctx.getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE);
         pref.edit().clear().commit();
+    }
+
+    public void startBluetoothExchanges(ASAPActivity asapActivity) {
+
+        if (!bluetoothStarted) {
+            asapActivity.startBluetooth();
+            asapActivity.startBluetoothDiscoverable();
+            asapActivity.startBluetoothDiscovery();
+            bluetoothStarted = true;
+        }
     }
 }

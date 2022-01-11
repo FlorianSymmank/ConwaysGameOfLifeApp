@@ -39,6 +39,7 @@ import de.floriansymmank.conwaysgameoflife.fragments.DialogListener;
 import de.floriansymmank.conwaysgameoflife.fragments.SaveDialogFragment;
 import de.floriansymmank.conwaysgameoflife.fragments.ShareDialogFragment;
 import de.floriansymmank.conwaysgameoflife.utils.NormalDrawer;
+import de.floriansymmank.conwaysgameoflife.views.GameOfLifeView;
 
 public class GameActivity extends ASAPActivity implements ScoreChangedListener, UniqueStateChangedListener, DialogListener {
 
@@ -59,6 +60,7 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
         binding.setLifecycleOwner(this);
 
         facade = ConwayGameApp.getConwayGameApp().getConwayGameEngineFacade();
+        ConwayGameApp.getConwayGameApp().startBluetoothExchanges(this);
 
         ConwayGame game = null;
         if ((game = (ConwayGame) getIntent().getSerializableExtra(CONWAYGAME_EXTRA)) != null) {
@@ -92,6 +94,11 @@ public class GameActivity extends ASAPActivity implements ScoreChangedListener, 
 
         Drawable img = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_play_arrow_24);
         setImage(binding.fabControl, img);
+    }
+
+    // testing purpose
+    protected GameOfLifeView getGameOfLifeView() {
+        return binding.gameOfLife;
     }
 
     private ActionBar initActionBar() {
