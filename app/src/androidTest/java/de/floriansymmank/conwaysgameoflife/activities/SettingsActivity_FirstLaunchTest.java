@@ -1,4 +1,4 @@
-package de.floriansymmank.conwaysgameoflife;
+package de.floriansymmank.conwaysgameoflife.activities;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
@@ -13,24 +13,21 @@ import static org.junit.Assert.fail;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import de.floriansymmank.conwaysgameoflife.activities.GameActivity;
-import de.floriansymmank.conwaysgameoflife.activities.InitialActivity;
-import de.floriansymmank.conwaysgameoflife.activities.SettingActivity;
-import de.floriansymmank.conwaysgameoflife.asap.ConwayGameApp;
+import de.floriansymmank.conwaysgameoflife.R;
 
-@RunWith(AndroidJUnit4.class)
+@RunWith(AndroidJUnit4ClassRunner.class)
 public class SettingsActivity_FirstLaunchTest {
 
     static Intent intentFirstLaunch;
@@ -41,15 +38,9 @@ public class SettingsActivity_FirstLaunchTest {
         bundle.putBoolean(SettingActivity.FIRST_LAUNCH, true);
         intentFirstLaunch.putExtras(bundle);
 
-        // fragt mich nicht wie ich darauf gekommen bin .....
         // SettingActivity ist ASAPActivity -> kein Virtual Device
         // SettingActivity braucht initializiertes ConwayGameApp mit ASAP Funktionalitäten
-        // works ig
-        ConwayGameApp.initializeConwayGameApp(
-                InstrumentationRegistry.getInstrumentation().startActivitySync(
-                        new Intent(ApplicationProvider.getApplicationContext(), InitialActivity.class)
-                )
-        );
+        ActivityScenario.launch(new Intent(ApplicationProvider.getApplicationContext(), InitialActivity.class));
     }
 
     @Rule
@@ -57,7 +48,7 @@ public class SettingsActivity_FirstLaunchTest {
 
     @Test
     public void firstLaunchHidesResetEverythingButton() {
-        onView(withId(R.id.btnResetEverything)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+        onView(ViewMatchers.withId(R.id.btnResetEverything)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
     }
 
     @Test
