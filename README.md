@@ -1,4 +1,4 @@
-Conway's Game of Life App for Andriod (UI and Bluetooth Part)
+Conway's Game of Life App for Android (UI and Bluetooth Part)
 
 Game Logic
 https://github.com/FlorianSymmank/ConwayGameEngine
@@ -10,3 +10,5 @@ Since ASAPAndroid needs Bluetooth capabilities to send and receive messages, thi
 This lead to the akward circumstance, that you can't debug this app with a virtual device. An actual android device is required.
 
 APK: https://github.com/FlorianSymmank/ConwaysGameOfLifeApp/blob/master/ConwaysGameOfLife_debug.apk
+
+Semester project documentation (German): https://github.com/FlorianSymmank/ConwaysGameOfLifeApp/blob/master/Meilenstein4_FlorianSymmank_578767.pdf
