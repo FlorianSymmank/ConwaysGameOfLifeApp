@@ -2,6 +2,7 @@ package de.floriansymmank.conwaysgameoflife.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -115,6 +116,7 @@ public class SettingActivity extends ASAPActivity {
                 // TODO: maybe redo input validation later
                 if (binding.etName.getText().toString().isEmpty()) {
                     Toast.makeText(getApplicationContext(), getApplicationContext().getText(R.string.EnterYourUserName), Toast.LENGTH_SHORT).show();
+                    Log.println(Log.DEBUG, "SettingActivity btnSaveClick", "etName text is empty");
                     return;
                 }
 
