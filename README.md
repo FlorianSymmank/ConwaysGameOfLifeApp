@@ -7,4 +7,6 @@ Bluetooth Messaging by
 https://github.com/SharedKnowledge/ASAPAndroid
 
 Since ASAPAndroid needs Bluetooth capabilities to send and receive messages, this app needs them too.
-This lead to the akward circumstance, that you can't debug this app with a virtual device. An actual android device is required. 
+This lead to the akward circumstance, that you can't debug this app with a virtual device. An actual android device is required.
+
+APK: https://github.com/FlorianSymmank/ConwaysGameOfLifeApp/blob/master/ConwaysGameOfLife_debug.apk
